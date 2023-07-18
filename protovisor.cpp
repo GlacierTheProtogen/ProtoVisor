@@ -66,8 +66,7 @@ public:
   void Run() override {
     uint32_t continuum = 0;
       while (!interrupt_received) {
-        usleep(5 * 1000);
-        //off_screen_canv
+        canvas()->SetPixel(5, 5, 100, 100, 100);
 
   }
 }
@@ -129,6 +128,14 @@ int main(int argc, char *argv[])
 
 	Canvas *canvas = matrix;
 
+	Runner *runner = new ProtoFace(matrix);
+
+	runner->Run();
+
+	delete runner;
+	delete canvas;
+
+	printf("Recieved CTRL-C. Exiting.\n");
 	return 0;
 }
 
