@@ -1,0 +1,14 @@
+[Unit]
+Description=xboxdrv
+
+[Service]
+Type=forking
+User=root
+Group=root
+PIDFile=/var/run/xboxdrv.pid
+ExecStart=/usr/bin/xboxdrv --daemon --detach --silent --mimic-xpad --pid-file /var/run/xboxdrv.pid --dbus disabled --config /etc/xboxdrv/drv-player1.conf --next-controller --config /etc/xboxdrv/drv-player2.conf
+
+[Install]
+WantedBy=multi-user.target
+
+
