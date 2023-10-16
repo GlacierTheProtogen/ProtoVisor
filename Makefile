@@ -3,7 +3,7 @@ CXXFLAGS=$(CFLAGS)
 OBJECTS=protovisor.o
 BINARIES=protovisor
 
-RGB_LIB_DISTRIBUTION=/home/pi/Desktop/rpi-rgb-led-matrix-master
+RGB_LIB_DISTRIBUTION=/home/dietpi/workspace/rpi-rgb-led-matrix
 RGB_INCDIR=$(RGB_LIB_DISTRIBUTION)/include
 RGB_LIBDIR=$(RGB_LIB_DISTRIBUTION)/lib
 RGB_LIBRARY_NAME=rgbmatrix
@@ -23,7 +23,7 @@ protovisor : protovisor.o $(RGB_LIBRARY)
 	$(CXX) $< -o $@ $(LDFLAGS)
 
 protovisor.o : protovisor.cpp
-	$(CXX) -I$(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(OBJECTS) $(BINARIES)

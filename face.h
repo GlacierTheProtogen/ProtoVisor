@@ -1,10 +1,7 @@
-make#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
+#ifndef FACE_H
+#define FACE_H
 
-
-//take a face name from the faces folder and then convert it to a 2d array of bools
+//take a face name from the faces folder and convert it to a 2d array of bools
 bool** FileToFace(std::string filename)
 {
   std::string fullfile="faces/"+filename+".txt";
@@ -35,15 +32,7 @@ bool** FileToFace(std::string filename)
    }
 
   return face2D;
+
 }
 
-int main()
-{
-
-  std::string face_names[5] = { "baseface", "blink", "happy", "heart", "poker" };
-  bool** face = FileToFace("blink");
-
-  std::cout << face[3][4] << std::endl;
-
-  return 0;
-}
+#endif

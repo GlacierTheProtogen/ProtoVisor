@@ -13,7 +13,8 @@ using namespace rgb_matrix;
 #include <string.h>
 #include <unistd.h>
 #include <algorithm>
-
+#include <fstream>
+#include "face.h"
 
 using std::min;
 using std::max;
@@ -58,6 +59,8 @@ private:
 
 };
 
+
+
 class ProtoFace : public Runner {
 public:
   ProtoFace(RGBMatrix *m) : Runner(m), matrix_(m) {
@@ -65,9 +68,21 @@ public:
   }
   void Run() override {
     uint32_t continuum = 0;
-      while (!interrupt_received) {
-        canvas()->SetPixel(5, 5, 100, 100, 100);
+    bool** face = FileToFace("happy");
 
+      while (!interrupt_received) {
+        for(int i=0; i < 64; i++)
+        {
+          for(int j=0; j < 32; j++)
+          {
+            if(face[j][i] == true)
+            {
+              canvas()->SetPixel(i, j, 0, 255, 0);
+              canvas()->SetPixel(128-i, j, 0, 255, 0);
+            }
+          }
+        }
+ 
   }
 }
 private:
@@ -87,9 +102,9 @@ int main(int argc, char *argv[])
   rgb_matrix::RuntimeOptions runtime_opt;
 
   // These are the defaults when no command-line flags are given.
-  matrix_options.rows = 64;
-  matrix_options.cols = 64;
-  matrix_options.chain_length = 2;
+  matrix_options.rows = 32;
+  matrix_options.cols = 128;
+  matrix_options.chain_length = 1;
   matrix_options.parallel = 1;
 
   // First things first: extract the command line flags that contain
