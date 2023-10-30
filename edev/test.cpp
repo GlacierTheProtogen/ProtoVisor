@@ -8,7 +8,8 @@
 
 // 1,000,000 / 30 = 33333
 const int mseconds = 33333;
-const int frames = 60;
+const int frames = 600;
+
 
 //Arbitrary, just needs to be mapped to /etc/xboxdrv/drv-player1/2.conf
 const int X1 = 34;
@@ -44,7 +45,6 @@ const int START_2 = 7;
 const int BACK_2 = 6;
 
 
-
 void process_events(struct libevdev *dev, int* arr, std::string device) {
 
 	struct input_event ev = {};
@@ -66,7 +66,7 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 	int JOYS_RIGHT;
 	int GUIDE;
 	int START;
-	int BACK;
+	//int BACK;
 
 	if(device == "event0")
 	{
@@ -84,7 +84,7 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 	  JOYS_RIGHT = JOYS_RIGHT_1;
 	  GUIDE = GUIDE_1;
 	  START = START_1;
-	  BACK = BACK_1;
+	  //BACK = BACK_1;
 	}
 	else
 	{
@@ -102,7 +102,7 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 	  JOYS_RIGHT = JOYS_RIGHT_2;
 	  GUIDE = GUIDE_2;
 	  START = START_2;
-	  BACK = BACK_2;
+	  //BACK = BACK_2;
 	}
 
 	while(1) {
@@ -118,59 +118,64 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 		  status = libevdev_next_event(dev, flags, &ev);
 		  if(!is_error(status))
 	 	  {
-		      swich(ev.code)
-		      case X:
-			arr[0] = frames;
-			break;
-		      case A:
-			arr[1] = frames;
-			break;
-		      case Y:
-			arr[2] = frames;
-		        break;
-		      case B:
-			arr[3] = frames;
-			break;
-		      case DPAD_UP:
-			arr[4] = frames;
-			break;
-		      case DPAD_DOWN:
-			arr[5] = frames;
-			break;
-		      case DPAD_LEFT:
-			arr[6] = frames;
-			break;
-		      case DPAD_RIGHT:
-			arr[7] = frames;
-		        break;
-		      case JOYS_UP:
-			arr[8] = frames;
-			break;
-		      case JOYS_DOWN:
-			arr[9] = frames;
-			break;
-		      case JOYS_LEFT:
-			arr[10] = frames;
-			break;
-		      case JOYS_RIGHT:
-			arr[11] = frames;
-		        break;
-		      case GUIDE:
-			arr[12] = frames;
-			break;
-		      case START:
-			arr[13] = frames;
-			break;
-		      case BACK:
-			arr[14] = frames;
-			break;
+		    if(ev.code == X){
+		      arr[0] = frames;
+		    }
+		    else if(ev.code == A){
+		      arr[1] = frames;
+		    }
+		    else if(ev.code == Y){
+		      arr[2] = frames;
+		    }
+		    else if(ev.code == B){
+		      arr[3] = frames;
+		    }
+		    else if(ev.code == DPAD_UP){
+		      arr[4] = frames;
+		    }
+		    else if(ev.code == DPAD_DOWN){
+		      arr[5] = frames;
+		    }
+		    else if(ev.code == DPAD_LEFT){
+		      arr[6] = frames;
+		    }
+		    else if(ev.code == DPAD_RIGHT){
+		      arr[7] = frames;
+		    }
+		    else if(ev.code == JOYS_UP){
+		      arr[8] = frames;
+		    }
+		    else if(ev.code == JOYS_DOWN){
+		      arr[9] = frames;
+		    }
+		    else if(ev.code == JOYS_LEFT){
+		      arr[10] = frames;
+		    }
+		    else if(ev.code == JOYS_RIGHT){
+		      arr[11] = frames;
+		    }
+		    else if(ev.code == GUIDE){
+		      arr[12] = frames;
+		    }
+		    else if(ev.code == START){
+		      arr[13] = frames;
+		    }
+		    else{
+		      arr[14] = frames;
+		    }
 		  }
 		}
 
 		for(int i = 0; i < 15; i++)
 		{
+		  if(arr[i] > 0)
+		  {
 			arr[i] = arr[i] - 1;
+		  }
 		}
+
+		usleep(20);
+
 	}
 }
 
@@ -197,23 +202,30 @@ void controller(std::string device, int* arr) {
 
 void reader(int* arr)
 {
-	
+	while(1) {
+	  for(std::size_t i = 0; i < 15; i++)
+	  {
+	    std::cout << arr[i] << " ";
+	  }
 
+	  std::cout << std::endl;
+	  usleep(mseconds);
+ 	}
 }
 
 int main() {
 
-        int *controller1buttons = new int[15];
-	int *controller2buttons = new int[15];
+        int* controller1buttons = new int[15];
+	int* controller2buttons = new int[15];
 
 
 	std::thread controller1(controller, "event0", controller1buttons);
 	std::thread controller2(controller, "event1", controller2buttons);
-	std::thread reader(controller1buttons);
+	std::thread readert(reader, controller1buttons);
 
 	controller1.join();
 	controller2.join();
-	reader.join();
+	readert.join();
 
 
  	return 0;
