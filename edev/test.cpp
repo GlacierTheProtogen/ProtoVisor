@@ -66,7 +66,7 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 	int JOYS_RIGHT;
 	int GUIDE;
 	int START;
-	//int BACK;
+	int BACK;
 
 	if(device == "event0")
 	{
@@ -84,7 +84,7 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 	  JOYS_RIGHT = JOYS_RIGHT_1;
 	  GUIDE = GUIDE_1;
 	  START = START_1;
-	  //BACK = BACK_1;
+	  BACK = BACK_1;
 	}
 	else
 	{
@@ -102,7 +102,7 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 	  JOYS_RIGHT = JOYS_RIGHT_2;
 	  GUIDE = GUIDE_2;
 	  START = START_2;
-	  //BACK = BACK_2;
+	  BACK = BACK_2;
 	}
 
 	while(1) {
@@ -160,7 +160,7 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 		    else if(ev.code == START){
 		      arr[13] = frames;
 		    }
-		    else{
+		    else if(ev.code == BACK){
 		      arr[14] = frames;
 		    }
 		  }
