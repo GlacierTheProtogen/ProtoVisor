@@ -4,10 +4,10 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <thread>
-#include <unistd.h>
+#include <chrono>
 
 // 1,000,000 / 30 = 33333
-const int mseconds = 33333;
+const int mseconds = 400;
 const int frames = 600;
 
 
@@ -45,7 +45,7 @@ const int START_2 = 7;
 const int BACK_2 = 6;
 
 
-void process_events(struct libevdev *dev, int* arr, std::string device) {
+void process_events(struct libevdev *dev, std::chrono::system_clock::time_point* arr, std::string device) {
 
 	struct input_event ev = {};
 	int status = 0;
@@ -119,58 +119,50 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 		  if(!is_error(status))
 	 	  {
 		    if(ev.code == X){
-		      arr[0] = frames;
+		      arr[0] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == A){
-		      arr[1] = frames;
+		      arr[1] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == Y){
-		      arr[2] = frames;
+		      arr[2] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == B){
-		      arr[3] = frames;
+		      arr[3] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == DPAD_UP){
-		      arr[4] = frames;
+		      arr[4] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == DPAD_DOWN){
-		      arr[5] = frames;
+		      arr[5] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == DPAD_LEFT){
-		      arr[6] = frames;
+		      arr[6] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == DPAD_RIGHT){
-		      arr[7] = frames;
+		      arr[7] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == JOYS_UP){
-		      arr[8] = frames;
+		      arr[8] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == JOYS_DOWN){
-		      arr[9] = frames;
+		      arr[9] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == JOYS_LEFT){
-		      arr[10] = frames;
+		      arr[10] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == JOYS_RIGHT){
-		      arr[11] = frames;
+		      arr[11] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == GUIDE){
-		      arr[12] = frames;
+		      arr[12] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == START){
-		      arr[13] = frames;
+		      arr[13] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == BACK){
-		      arr[14] = frames;
+		      arr[14] = std::chrono::system_clock::now();
 		    }
-		  }
-		}
-
-		for(int i = 0; i < 15; i++)
-		{
-		  if(arr[i] > 0)
-		  {
-			arr[i] = arr[i] - 1;
 		  }
 		}
 
@@ -180,7 +172,7 @@ void process_events(struct libevdev *dev, int* arr, std::string device) {
 }
 
 
-void controller(std::string device, int* arr) {
+void controller(std::string device, std::chrono::system_clock::time_point* arr) {
 
 	struct libevdev *dev = nullptr;
 
@@ -200,12 +192,17 @@ void controller(std::string device, int* arr) {
 }
 
 
-void reader(int* arr)
+void reader(std::chrono::system_clock::time_point* arr)
 {
 	while(1) {
+
+	  std::chrono::system_clock::time_point second = std::chrono::system_clock::now();
+
+
 	  for(std::size_t i = 0; i < 15; i++)
 	  {
-	    std::cout << arr[i] << " ";
+	    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(second - arr[i]);
+	    std::cout << (milliseconds.count() > 40);
 	  }
 
 	  std::cout << std::endl;
@@ -215,9 +212,11 @@ void reader(int* arr)
 
 int main() {
 
-        int* controller1buttons = new int[15];
-	int* controller2buttons = new int[15];
+        //int* controller1buttons = new int[15];
+	//int* controller2buttons = new int[15];
 
+	std::chrono::system_clock::time_point* controller1buttons = new std::chrono::system_clock::time_point[15];
+	std::chrono::system_clock::time_point* controller2buttons = new std::chrono::system_clock::time_point[15];
 
 	std::thread controller1(controller, "event0", controller1buttons);
 	std::thread controller2(controller, "event1", controller2buttons);
