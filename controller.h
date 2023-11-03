@@ -1,11 +1,5 @@
-#include <libevdev/libevdev.h>
-#include <iostream>
-#include <string>
-#include <unistd.h>
-#include <fcntl.h>
-#include <thread>
-#include <chrono>
-
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 
 // Only needed for reader function
 const int mseconds = 400;
@@ -51,8 +45,8 @@ const int BACK_2 = 6;
  The controller is initiated by:
  1. Create an arry of timestamps
  2. Create an infinite loop that detects
- key presses from /dev/input/ devices using
- libevdev and xboxdrv library
+ key presses from /dev/input/* using libevdev
+ and xboxdrv library
  3. If we want to see if a button is pressed,
  compare the timestamp with the current time
 
@@ -252,3 +246,5 @@ int main() {
 
  	return 0;
 }
+
+#endif

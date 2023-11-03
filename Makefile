@@ -1,4 +1,5 @@
-CFLAGS=-Wall -O3 -g -Wextra
+CFLAGS=-Wall -O3 -g -Wextra pkg-config
+LIBRARIES := -levdev
 CXXFLAGS=$(CFLAGS)
 OBJECTS=protovisor.o
 BINARIES=protovisor
@@ -23,7 +24,7 @@ protovisor : protovisor.o $(RGB_LIBRARY)
 	$(CXX) $< -o $@ $(LDFLAGS)
 
 protovisor.o : protovisor.cpp
-	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c $^ $(LIBRARIES)-o $@ $<
 
 clean:
 	rm -f $(OBJECTS) $(BINARIES)

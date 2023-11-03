@@ -3,6 +3,7 @@
 
 using namespace rgb_matrix;
 
+#include <libevdev-1.0/libevdev/libevdev.h>
 #include <assert.h>
 #include <getopt.h>
 #include <limits.h>
@@ -14,7 +15,15 @@ using namespace rgb_matrix;
 #include <unistd.h>
 #include <algorithm>
 #include <fstream>
+#include <chrono>
+#include <thread>
+#include <fcntl.h>
+
+
 #include "face.h"
+#include "controller.h"
+
+
 
 using std::min;
 using std::max;
