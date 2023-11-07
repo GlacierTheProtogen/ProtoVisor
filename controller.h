@@ -53,8 +53,8 @@ const int BACK_2 = 6;
  We use this method instead of a more streamlined
  and built in "isPressed" button because xboxdrv
  is not able to detect wether or not a button
- is being held down or not. A bit convoluted,
- but works for our needs.
+ is being held down. A bit convoluted, but works
+ for our needs.
 
 
 */
@@ -205,6 +205,8 @@ void controller(std::string device, std::chrono::system_clock::time_point* arr) 
 }
 
 
+
+//Testing purposes only
 void reader(std::chrono::system_clock::time_point* arr)
 {
 	while(1) {
@@ -228,23 +230,6 @@ int is_button_pushed(std::chrono::system_clock::time_point* arr, int iter)
 	std::chrono::system_clock::time_point ref = std::chrono::system_clock::now();
 	auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ref - arr[iter]);
 	return(milliseconds.count() < frames);
-}
-
-
-int main() {
-
-	std::chrono::system_clock::time_point* controller1buttons = new std::chrono::system_clock::time_point[15];
-	std::chrono::system_clock::time_point* controller2buttons = new std::chrono::system_clock::time_point[15];
-
-	std::thread controller1(controller, "event0", controller1buttons);
-	std::thread controller2(controller, "event1", controller2buttons);
-	//std::thread readert(reader, controller2buttons);
-
-	controller1.join();
-	controller2.join();
-	//readert.join();
-
- 	return 0;
 }
 
 #endif
