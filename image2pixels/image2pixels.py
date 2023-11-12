@@ -1,6 +1,7 @@
 from PIL import Image
+import sys
 
-im = Image.open("blink.png")
+im = Image.open(sys.argv[1])
 pix = im.load()
 
 blacktuple = (0, 0, 0, 255)
