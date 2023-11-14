@@ -225,11 +225,23 @@ void reader(std::chrono::system_clock::time_point* arr)
 }
 
 
-int is_button_pushed(std::chrono::system_clock::time_point* arr, int iter)
+int is_button_pushed(std::chrono::system_clock::time_point* arr)
 {
+	//return the array value of a button pushed, otherwise return 0 if nothing is pushed.
 	std::chrono::system_clock::time_point ref = std::chrono::system_clock::now();
-	auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ref - arr[iter]);
-	return(milliseconds.count() < frames);
+	int iter = 1;
+
+	for(std::size_t i = 0; i < 6; i++)
+	{
+	  auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ref - arr[i]);
+	  if(milliseconds.count() < frames)
+	  {
+	    return iter;
+	  }
+	  iter++;
+	}
+
+	return 0;
 }
 
 #endif

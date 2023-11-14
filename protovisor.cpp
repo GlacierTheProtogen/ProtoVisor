@@ -3,7 +3,8 @@
 
 using namespace rgb_matrix;
 
-#include <libevdev-1.0/libevdev/libevdev.h>
+#include <libevdev/libevdev.h>
+
 #include <assert.h>
 #include <getopt.h>
 #include <limits.h>
@@ -32,6 +33,11 @@ using std::max;
 #define TERM_NORM "\033[0m"
 
 using namespace rgb_matrix;
+
+
+std::chrono::system_clock::time_point* controller1buttons = new std::chrono::system_clock::time_point[15];
+std::chrono::system_clock::time_point* controller2buttons = new std::chrono::system_clock::time_point[15];
+
 
 volatile bool interrupt_received = false;
 static void InterruptHandler(int signo) {
@@ -75,32 +81,107 @@ public:
   ProtoFace(RGBMatrix *m) : Runner(m), matrix_(m) {
     off_screen_canvas_ = m->CreateFrameCanvas();
   }
+  void drawFaceInput(bool** face) {
+    for(int i=0; i < 64; i++)
+    {
+      for(int j=0; j < 32; j++)
+      {
+        if(face[j][i] == true)
+        {
+          canvas()->SetPixel(i, j, 0, 255, 0);
+          canvas()->SetPixel(128-i, j, 0, 255, 0);
+        }
+      }
+    }
+  }
   void Run() override {
     uint32_t continuum = 0;
-    bool** face = FileToFace("happy");
+    bool buttonPressed = false;
 
-      while (!interrupt_received) {
-        for(int i=0; i < 64; i++)
-        {
-          for(int j=0; j < 32; j++)
-          {
-            if(face[j][i] == true)
+    bool** happy = FileToFace("happy");
+    bool** base = FileToFace("baseface");
+    bool** heart = FileToFace("heart");
+    bool** poker = FileToFace("poker");
+    bool** angry = FileToFace("angry");
+    bool** sad = FileToFace("sad");
+    bool** uwu = FileToFace("uwu");
+
+
+    int button;
+    //int blinktimer = 0;
+
+    bool button_pressed = false;
+
+
+    drawFaceInput(base);
+
+    while (!interrupt_received) {
+
+        /* If a button is pressed, maintain the same face that we have been
+        drawing. If not, then go back to basic face until a new button is
+        pressed */
+
+	button = is_button_pushed(controller1buttons);
+
+	if(button_pressed == true)
+	{
+	  if(button == 0)
+	  {
+	    button_pressed = false;
+            canvas()->Clear();
+            drawFaceInput(base);
+	  }
+	}
+	else
+	{
+	  if(button != 0)
+	  {
+	    button_pressed = true;
+	    canvas()->Clear();
+
+	    if(button == 1)
+	    {
+              drawFaceInput(sad);
+	    }
+	    else if(button == 2)
             {
-              canvas()->SetPixel(i, j, 0, 255, 0);
-              canvas()->SetPixel(128-i, j, 0, 255, 0);
+              drawFaceInput(angry);
+	    }
+	    else if(button == 3)
+	    {
+              drawFaceInput(happy);
             }
-          }
-        }
- 
-  }
-}
-private:
-  RGBMatrix *const matrix_;
-  FrameCanvas *off_screen_canvas_;
+            else if(button == 4)
+            {
+              drawFaceInput(uwu);
+            }
+            else if(button == 5)
+            {
+              drawFaceInput(poker);
+            }
+            else if(button == 6)
+            {
+              drawFaceInput(heart);
+            }
+	  }
+	}
+     }
+
+ }
+ private:
+   RGBMatrix *const matrix_;
+   FrameCanvas *off_screen_canvas_;
 };
 
 int main(int argc, char *argv[])
 {
+
+  // Set up the controllers.
+
+
+  std::thread controller1(controller, "event0", controller1buttons);
+  std::thread controller2(controller, "event1", controller2buttons);
+  //std::thread readert(reader, controller1buttons);
 
   int demo = -1;
   int scroll_ms = 30;
