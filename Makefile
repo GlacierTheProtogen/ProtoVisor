@@ -22,8 +22,10 @@ $(RGB_LIBRARY): FORCE
 protovisor : protovisor.o $(RGB_LIBRARY)
 	$(CXX) $< -o $@ $(LDFLAGS)
 
-protovisor.o : protovisor.cpp
+protovisor.o : protovisor.cpp face.h runner.h controller.h
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
+
+
 
 clean:
 	rm -f $(OBJECTS) $(BINARIES)
