@@ -47,22 +47,22 @@ public:
   ProtoFace(RGBMatrix *m) : Runner(m), matrix_(m) {
     off_screen_canvas_ = m->CreateFrameCanvas();
   }
-  void drawFaceInput(bool** face) {
+  void drawFaceInput(bool** face, int floater) {
+    canvas()->Clear();
     for(int i=0; i < 64; i++)
     {
       for(int j=0; j < 32; j++)
       {
         if(face[j][i] == true)
         {
-          canvas()->SetPixel(i, j, 0, 255, 0);
-          canvas()->SetPixel(128-i, j, 0, 255, 0);
+          canvas()->SetPixel(i, j-floater, 0, 255, 0);
+          canvas()->SetPixel(128-i, j-floater, 0, 255, 0);
         }
       }
     }
   }
   void Run() override {
     uint32_t continuum = 0;
-    bool buttonPressed = false;
 
     bool** happy = FileToFace("happy");
     bool** base = FileToFace("baseface");
@@ -73,13 +73,18 @@ public:
     bool** uwu = FileToFace("uwu");
 
 
-    int button;
-    //int blinktimer = 0;
 
-    bool button_pressed = false;
+    int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
+    int flowcounter = 0; // Incremented integer that is used for the cosign function.
+    int flowcountercompare = -8; // Used to keep track of the last integer that was used in the cosign function.
+    int curButton = -1; // Current button that is pressed. Start off with an arbitrary number that doesn't map to a button.
+    int button; // Button that is pressed.
+    bool buttonPressed = false; // Wether or not a button is pressed.
+    bool drawNewFace; // Decides wether we are drawing a face on the next iteration of the loop
+    bool** currentFace = base; // Current face
+    bool** prevFace = base; // Face to keep track of what the previous face was 
 
-
-    drawFaceInput(base);
+    drawFaceInput(base, 0);
 
     while (!interrupt_received) {
 
@@ -87,51 +92,76 @@ public:
         drawing. If not, then go back to basic face until a new button is
         pressed */
 
+        flowcounter++;
+        drawNewFace = false;
+
+        double cosign = 2 * cos(flowcounter / flowcycle);
+
+        if(flowcountercompare != (int)(cosign))
+        {
+          //std::cout << flowcountercompare << std::endl;
+          //std::cout << (int)(cosign) << std::endl << std::endl;
+
+          flowcountercompare = (int)(cosign);
+          drawNewFace = true;
+        }
+
+        if(prevFace != currentFace)
+        {
+          prevFace = currentFace;
+
+          drawNewFace = true;
+        }
+
 	button = is_button_pushed(controller1buttons);
 
-	if(button_pressed == true)
+	if(buttonPressed == true)
 	{
 	  if(button == 0)
 	  {
-	    button_pressed = false;
-            canvas()->Clear();
-            drawFaceInput(base);
+            currentFace = base;
+	    buttonPressed = false;
 	  }
 	}
 	else
 	{
 	  if(button != 0)
 	  {
-	    button_pressed = true;
-	    canvas()->Clear();
+	    buttonPressed = true;
 
 	    if(button == 1)
 	    {
-              drawFaceInput(sad);
+              currentFace = sad;
 	    }
 	    else if(button == 2)
             {
-              drawFaceInput(angry);
+              currentFace = angry;
 	    }
 	    else if(button == 3)
 	    {
-              drawFaceInput(happy);
+              currentFace = happy;
             }
             else if(button == 4)
             {
-              drawFaceInput(uwu);
+              currentFace = uwu;
             }
             else if(button == 5)
             {
-              drawFaceInput(poker);
+              currentFace = poker;
             }
             else if(button == 6)
             {
-              drawFaceInput(heart);
+              currentFace = heart;
             }
-	  }
+	 }
 	}
+        if(drawNewFace == true)
+        {
+          drawFaceInput(currentFace, (int)(cosign));
+        }
      }
+
+     flowcounter = flowcounter % (10 * flowcycle);
 
  }
  private:
