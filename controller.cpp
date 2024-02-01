@@ -1,6 +1,28 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+
+#include <iostream>
+#include "led-matrix.h"
+
+using namespace rgb_matrix;
+
+#include <libevdev/libevdev.h>
+
+#include <unistd.h>
+#include <algorithm>
+#include <fstream>
+#include <chrono>
+#include <fcntl.h>
+
+#include "face.h"
+#include "runner.h"
+
+
+using std::min;
+using std::max;
+
+
 // Only needed for reader function
 const int mseconds = 400;
 
@@ -61,7 +83,6 @@ const int BACK_2 = 6;
 
 
 void process_events(struct libevdev *dev, std::chrono::system_clock::time_point* arr, std::string device) {
-
 	struct input_event ev = {};
 	int status = 0;
 	auto is_error = [](int v) { return v < 0 && v != -EAGAIN; };

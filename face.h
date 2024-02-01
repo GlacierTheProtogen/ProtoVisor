@@ -1,6 +1,8 @@
 #ifndef FACE_H
 #define FACE_H
 
+#include <string>
+#include <fstream>
 
 //take a face name from the faces folder and convert it to a 2d array of bools
 bool** FileToFace(std::string filename)

@@ -19,13 +19,17 @@ all : $(BINARIES)
 $(RGB_LIBRARY): FORCE
 	$(MAKE) -C $(RGB_LIBDIR)
 
-protovisor : protovisor.o $(RGB_LIBRARY)
+protovisor : protovisor.o runner.o controller.o $(RGB_LIBRARY)
 	$(CXX) $< -o $@ $(LDFLAGS)
 
-protovisor.o : protovisor.cpp face.h runner.h controller.h
+protovisor.o : protovisor.cpp face.h
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
+runner.o : runner.cpp runner.h
+	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
+controller.o : controller.cpp
+	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 clean:
 	rm -f $(OBJECTS) $(BINARIES)

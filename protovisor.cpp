@@ -22,7 +22,8 @@ using namespace rgb_matrix;
 
 
 #include "face.h"
-#include "controller.h"
+#include "controller.cpp"
+#include "runner.cpp"
 #include "runner.h"
 
 
@@ -32,11 +33,24 @@ using std::max;
 #define TERM_ERR  "\033[1;31m"
 #define TERM_NORM "\033[0m"
 
-using namespace rgb_matrix;
-
 
 std::chrono::system_clock::time_point* controller1buttons = new std::chrono::system_clock::time_point[15];
 std::chrono::system_clock::time_point* controller2buttons = new std::chrono::system_clock::time_point[15];
+
+
+static int usage(const char *progname) {
+  fprintf(stderr, "usage: %s <options> -D <demo-nr> [optional parameter]\n",
+          progname);
+  fprintf(stderr, "Options:\n");
+  fprintf(stderr,
+          "\t-D <demo-nr>              : Always needs to be set\n"
+          );
+
+
+  rgb_matrix::PrintMatrixFlags(stderr);
+
+  return 1;
+}
 
 
 int main(int argc, char *argv[])
