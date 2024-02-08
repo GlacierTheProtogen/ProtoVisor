@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
   std::thread controller1(controller, "event0", controller1buttons);
   std::thread controller2(controller, "event1", controller2buttons);
-  //std::thread readert(reader, controller1buttons);
+  //std::thread readert(reader, controller2buttons);
 
   int demo = -1;
   int scroll_ms = 30;

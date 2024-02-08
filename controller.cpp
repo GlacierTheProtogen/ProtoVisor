@@ -30,6 +30,7 @@ const int mseconds = 400;
 int frames = 50;
 
 //Arbitrary, just needs to be mapped to /etc/xboxdrv/drv-player1/2.conf
+//FIXME: Replace below with enums.
 const int X1 = 34;
 const int A1 = 20;
 const int Y1 = 35;
@@ -87,6 +88,9 @@ void process_events(struct libevdev *dev, std::chrono::system_clock::time_point*
 	int status = 0;
 	auto is_error = [](int v) { return v < 0 && v != -EAGAIN; };
 	const auto flags = LIBEVDEV_READ_FLAG_NORMAL | LIBEVDEV_READ_FLAG_BLOCKING;
+
+
+        // FIXME: Replace the below with enums.
 
 	int X;
 	int A;
@@ -150,7 +154,7 @@ void process_events(struct libevdev *dev, std::chrono::system_clock::time_point*
 
 		if(libevdev_has_event_pending(dev))
 		{
-
+                  // Can't be a switch statement because of variable comparison
 		  status = libevdev_next_event(dev, flags, &ev);
 		  if(!is_error(status))
 	 	  {
@@ -246,7 +250,7 @@ void reader(std::chrono::system_clock::time_point* arr)
 }
 
 
-int is_button_pushed(std::chrono::system_clock::time_point* arr)
+int current_button_pushed(std::chrono::system_clock::time_point* arr)
 {
 	//return the array value of a button pushed, otherwise return 0 if nothing is pushed.
 	std::chrono::system_clock::time_point ref = std::chrono::system_clock::now();
@@ -264,5 +268,24 @@ int is_button_pushed(std::chrono::system_clock::time_point* arr)
 
 	return 0;
 }
+
+bool is_button_pushed(std::chrono::system_clock::time_point* arr, int i)
+{
+	//return wether or not a button is pushed within a controller array.
+        std::chrono::system_clock::time_point ref = std::chrono::system_clock::now();
+
+        //FIXME: Error checking to see wether or not the index is within range.
+
+        auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ref - arr[i]);
+
+	if(milliseconds.count() < frames)
+        {
+	  return true;
+	}
+
+	return false;
+
+}
+
 
 #endif

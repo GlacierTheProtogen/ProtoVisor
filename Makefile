@@ -1,6 +1,6 @@
 CFLAGS=-Wall -O3 -g -Wextra `pkg-config --cflags --libs libevdev`
 CXXFLAGS=$(CFLAGS)
-OBJECTS=protovisor.o
+OBJECTS=protovisor.o runner.o controller.o
 BINARIES=protovisor
 
 RGB_LIB_DISTRIBUTION=/home/dietpi/workspace/rpi-rgb-led-matrix

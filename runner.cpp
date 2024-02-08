@@ -7,6 +7,7 @@
 #include <limits.h>
 #include <math.h>
 #include <chrono>
+#include <cassert>
 
 
 extern std::chrono::system_clock::time_point* controller1buttons;
@@ -54,6 +55,11 @@ public:
     bool drawNewFace; // Decides wether we are drawing a face on the next iteration of the loop
     bool** currentFace = base; // Current face
     bool** prevFace = base; // Face to keep track of what the previous face was
+    int home_button_counter1 = 0; // Keeps track of how long the home button on controller1 has been pushed down
+    int home_button_counter2 = 0; // Keeps track of how long the home button on controller2 has been pushed down
+    int home_time = 5556000; // Time to keep track of the home button being pushed down before going to menu
+    int eye_open_counter =  1056000; // Time to keep eyes open before blinking
+    int eye_closed_counter = eye_open_counter / 20; // Time eyes are kept closed for blinking
 
     drawFaceInput(base, 0);
 
@@ -66,12 +72,35 @@ public:
         flowcounter++;
         drawNewFace = false;
 
-        if((flowcounter % 10560000) < 556000 && isBlinking == false)
+	if(is_button_pushed(controller1buttons, 12))
+        {
+          home_button_counter1++;
+        }
+        else
+        {
+	  home_button_counter1 = 0;
+        }
+
+        if(is_button_pushed(controller2buttons, 12))
+        {
+          home_button_counter2++;
+        }
+        else
+        {
+          home_button_counter2 = 0;
+        }
+
+        if(home_button_counter1 > home_time || home_button_counter2 > home_time)
+        {
+          assert(0);
+        }
+
+        if((flowcounter % eye_open_counter) < eye_closed_counter && isBlinking == false)
         {
             isBlinking = true;
             drawNewFace = true;
         }
-        else if((flowcounter % 10560000) >= 556000 && isBlinking == true)
+        else if((flowcounter % eye_open_counter) >= eye_closed_counter && isBlinking == true)
         {
             isBlinking = false;
             drawNewFace = true;
@@ -94,7 +123,7 @@ public:
           drawNewFace = true;
         }
 
-	button = is_button_pushed(controller1buttons);
+	button = current_button_pushed(controller1buttons);
 
         // FIXME: The number of below if statements sucks. Maybe a dictionary of pointers?
 
