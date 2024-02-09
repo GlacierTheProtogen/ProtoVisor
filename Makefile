@@ -31,6 +31,10 @@ runner.o : runner.cpp runner.h
 controller.o : controller.cpp
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
+menu.o : menu.cpp
+	$(CXX) -I $(RDB_INCDIR) $(CXXFLAGS) -c -o $@ $<
+
+
 clean:
 	rm -f $(OBJECTS) $(BINARIES)
 

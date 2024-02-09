@@ -2,7 +2,7 @@
 #include "face.h"
 #include "led-matrix.h"
 #include "controller.cpp"
-
+#include "menu.cpp"
 
 #include <limits.h>
 #include <math.h>
@@ -12,12 +12,6 @@
 
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
-
-volatile bool interrupt_received = false;
-static void InterruptHandler(int signo) {
-  interrupt_received = true;
-}
-
 
 class ProtoFace : public Runner {
 public:
@@ -29,20 +23,20 @@ public:
 
     //FIXME: The following should be objects.
 
-    bool** happy = FileToFace("happy");
-    bool** base = FileToFace("baseface");
-    bool** heart = FileToFace("heart");
-    bool** poker = FileToFace("poker");
-    bool** angry = FileToFace("angry");
-    bool** sad = FileToFace("sad");
-    bool** uwu = FileToFace("uwu");
+    bool** happy = FileToFace("happy", false);
+    bool** base = FileToFace("baseface", false);
+    bool** heart = FileToFace("heart", false);
+    bool** poker = FileToFace("poker", false);
+    bool** angry = FileToFace("angry", false);
+    bool** sad = FileToFace("sad", false);
+    bool** uwu = FileToFace("uwu", false);
 
-    bool** happyblink = FileToFace("happy-blink");
-    bool** baseblink = FileToFace("baseface-blink");
-    bool** heartblink = FileToFace("heart-blink");
-    bool** pokerblink = FileToFace("poker-blink");
-    bool** angryblink = FileToFace("angry-blink");
-    bool** sadblink = FileToFace("sad-blink");
+    bool** happyblink = FileToFace("happy-blink", false);
+    bool** baseblink = FileToFace("baseface-blink", false);
+    bool** heartblink = FileToFace("heart-blink", false);
+    bool** pokerblink = FileToFace("poker-blink", false);
+    bool** angryblink = FileToFace("angry-blink", false);
+    bool** sadblink = FileToFace("sad-blink", false);
 
 
     int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
@@ -58,7 +52,7 @@ public:
     int home_button_counter1 = 0; // Keeps track of how long the home button on controller1 has been pushed down
     int home_button_counter2 = 0; // Keeps track of how long the home button on controller2 has been pushed down
     int home_time = 5556000; // Time to keep track of the home button being pushed down before going to menu
-    int eye_open_counter =  1056000; // Time to keep eyes open before blinking
+    int eye_open_counter =  10560000; // Time to keep eyes open before blinking
     int eye_closed_counter = eye_open_counter / 20; // Time eyes are kept closed for blinking
 
     drawFaceInput(base, 0);
@@ -92,7 +86,12 @@ public:
 
         if(home_button_counter1 > home_time || home_button_counter2 > home_time)
         {
-          assert(0);
+          //assert(0);
+          Runner *runner = new MenuFace(matrix_);
+          runner->Run();
+
+          delete runner;
+
         }
 
         if((flowcounter % eye_open_counter) < eye_closed_counter && isBlinking == false)
