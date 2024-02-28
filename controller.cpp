@@ -256,7 +256,7 @@ int current_button_pushed(std::chrono::system_clock::time_point* arr)
 	std::chrono::system_clock::time_point ref = std::chrono::system_clock::now();
 	int iter = 1;
 
-	for(std::size_t i = 0; i < 6; i++)
+	for(std::size_t i = 0; i < 15; i++)
 	{
 	  auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ref - arr[i]);
 	  if(milliseconds.count() < frames)

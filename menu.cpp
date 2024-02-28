@@ -8,11 +8,53 @@
 #include <math.h>
 #include <chrono>
 #include <cassert>
-
+#include <map>
 
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
 
+
+class IntTuple {
+  public:
+    IntTuple(int x_input, int y_input)
+    {
+      coords[0] = x_input;
+      coords[1] = y_input;
+    }
+    int get_x()
+    {
+      return coords[0];
+    }
+    int get_y()
+    {
+      return coords[1];
+    }
+  private:
+    int coords[2];
+};
+
+
+void changeOption(bool** face, IntTuple* prevcoords, IntTuple* newcoords)
+{
+
+  for(int i = prevcoords->get_x(); i < prevcoords->get_x() + 2; i++)
+  {
+     for(int j = prevcoords->get_y(); j < prevcoords->get_y() + 2; j++)
+     {
+       face[j][i]=false;
+     }
+  }
+
+  for(int i = newcoords->get_x(); i < newcoords->get_x() + 2; i++)
+  {
+    for(int j = newcoords->get_y(); j < newcoords->get_y() +2; j++)
+    {
+      face[j][i]=true;
+    }
+  }
+
+
+}
 
 class MenuFace : public Runner {
 public:
@@ -22,10 +64,7 @@ public:
   void Run() override {
     uint32_t continuum = 0;
 
-    //FIXME: The following should be objects.
-
     bool** menu = FileToFace("menu-base", true);
-
 
     int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
     int flowcounter = 0; // Incremented integer that is used for the cosign function.
@@ -39,7 +78,29 @@ public:
     bool drawNewFace = true;
     bool** prevMenu = menu;
 
-    drawMenuInput(menu, 0);
+    IntTuple* SettingsCoords = new IntTuple(2, 4);
+    IntTuple* PongCoords = new IntTuple(2, 14);
+    IntTuple* DinosaurGameCoords = new IntTuple(2, 24);
+    IntTuple* SnakeCoords = new IntTuple(66, 4);
+    IntTuple* SimonSaysCoords = new IntTuple(66, 14);
+    IntTuple* BackCoords = new IntTuple(66, 24);
+
+    std::map<int, IntTuple*> MenuItems;
+    MenuItems.insert(std::make_pair(0, SettingsCoords));
+    MenuItems.insert(std::make_pair(1, PongCoords));
+    MenuItems.insert(std::make_pair(2, DinosaurGameCoords));
+    MenuItems.insert(std::make_pair(3, SnakeCoords));
+    MenuItems.insert(std::make_pair(4, SimonSaysCoords));
+    MenuItems.insert(std::make_pair(5, BackCoords));
+
+    changeOption(currentMenu, SettingsCoords, SettingsCoords);
+    drawMenuInput(currentMenu, 0);
+
+    // Treat the menu items as an array. Manipulate this number based on what
+    // Input the user presses on the controller. Finally, map out this 
+    // Selection on the menu.
+    int sel = 0;
+    int prevsel = 0;
 
     while (!interrupt_received) {
 
@@ -50,6 +111,7 @@ public:
         flowcounter++;
         drawNewFace = false;
 
+        prevsel = sel;
 
         double cosign = 2 * cos(flowcounter / flowcycle);
 
@@ -67,15 +129,15 @@ public:
 
 	button = current_button_pushed(controller1buttons);
 
+
         // FIXME: The number of below if statements sucks. Maybe a dictionary of pointers?
-        /*
 
 	if(buttonPressed == true)
 	{
 	  if(button == 0)
 	  {
-            currentFace = base;
 	    buttonPressed = false;
+            drawNewFace = true;
 	  }
 	}
 	else
@@ -83,34 +145,44 @@ public:
 	  if(button != 0)
 	  {
 	    buttonPressed = true;
+            drawNewFace = true;
 
-	    if(button == 1)
-	    {
-              currentFace = sad;
+	    if(button == 10 || button == 6)
+            {
+              if(sel == 5)
+              {
+                sel = 0;
+              }
+              else
+              {
+                sel = sel + 1;
+              }
 	    }
-	    else if(button == 2)
-            {
-              currentFace = angry;
-	    }
-	    else if(button == 3)
+	    else if(button == 9 || button == 5)
 	    {
-              currentFace = happy;
+              if(sel == 0)
+              {
+                sel = 5;
+              }
+              else
+              {
+                sel = sel - 1;
+              }
             }
-            else if(button == 4)
+            else if(button == 12 || button == 8 || button == 7 || button == 11)
             {
-              currentFace = uwu;
+              sel = sel + 3;
             }
-            else if(button == 5)
-            {
-              currentFace = poker;
-            }
-            else if(button == 6)
-            {
-              currentFace = heart;
-            }
+
+
+            //sel = abs(sel % 6);
+
+            sel = abs(sel) % 6;
+            changeOption(currentMenu, MenuItems[prevsel], MenuItems[sel]);
+
 	 }
 	}
-        */
+
 
         if(drawNewFace == true)
         {

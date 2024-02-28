@@ -51,7 +51,7 @@ public:
     bool** prevFace = base; // Face to keep track of what the previous face was
     int home_button_counter1 = 0; // Keeps track of how long the home button on controller1 has been pushed down
     int home_button_counter2 = 0; // Keeps track of how long the home button on controller2 has been pushed down
-    int home_time = 5556000; // Time to keep track of the home button being pushed down before going to menu
+    int home_time = 3556000; // Time to keep track of the home button being pushed down before going to menu
     int eye_open_counter =  10560000; // Time to keep eyes open before blinking
     int eye_closed_counter = eye_open_counter / 20; // Time eyes are kept closed for blinking
 
