@@ -1,6 +1,5 @@
 #include "runner.h"
 #include "face.h"
-#include "led-matrix.h"
 #include "controller.cpp"
 #include "menu.cpp"
 
@@ -19,8 +18,6 @@ public:
     off_screen_canvas_ = m->CreateFrameCanvas();
   }
   void Run() override {
-    uint32_t continuum = 0;
-
     //FIXME: The following should be objects.
 
     bool** happy = FileToFace("happy", false);
@@ -55,7 +52,15 @@ public:
     int eye_open_counter =  10560000; // Time to keep eyes open before blinking
     int eye_closed_counter = eye_open_counter / 20; // Time eyes are kept closed for blinking
 
-    drawFaceInput(base, 0);
+    int rave_r = 0;
+    int rave_g = 0;
+    int rave_b = 0;
+    bool rave_mode = false;
+    int rave_switch = 0;
+    int prev_rave_switch = 0;
+    int rave_loop = 200000;
+
+    drawFaceInput(base, 0, 0, 255, 0);
 
     while (!interrupt_received) {
 
@@ -65,6 +70,32 @@ public:
 
         flowcounter++;
         drawNewFace = false;
+
+        rave_switch = (flowcounter - (flowcounter % rave_loop)) % 765;
+
+
+        if((prev_rave_switch != rave_switch) && rave_mode == true)
+        {
+          if(rave_switch <=255) {
+            int c = rave_switch;
+            rave_b = 255 - c;
+            rave_r = c;
+          }
+          else if(rave_switch > 255 && rave_switch <= 511) {
+            int c = rave_switch - 256;
+            rave_r = 255 - c;
+            rave_g = c;
+          }
+          else {
+            int c = rave_switch - 512;
+            rave_g = 255 - c;
+            rave_b = c;
+          }
+
+          drawNewFace = true;
+        }
+
+        prev_rave_switch = rave_switch;
 
 	if(is_button_pushed(controller1buttons, 12))
         {
@@ -79,6 +110,7 @@ public:
         {
           home_button_counter2++;
         }
+
         else
         {
           home_button_counter2 = 0;
@@ -86,7 +118,6 @@ public:
 
         if(home_button_counter1 > home_time || home_button_counter2 > home_time)
         {
-          //assert(0);
           Runner *runner = new MenuFace(matrix_);
           runner->Run();
 
@@ -96,22 +127,19 @@ public:
 
         if((flowcounter % eye_open_counter) < eye_closed_counter && isBlinking == false)
         {
-            isBlinking = true;
-            drawNewFace = true;
+          isBlinking = true;
+          drawNewFace = true;
         }
         else if((flowcounter % eye_open_counter) >= eye_closed_counter && isBlinking == true)
         {
-            isBlinking = false;
-            drawNewFace = true;
+          isBlinking = false;
+          drawNewFace = true;
         }
 
         double cosign = 2 * cos(flowcounter / flowcycle);
 
         if(flowcountercompare != (int)(cosign))
         {
-          //std::cout << flowcountercompare << std::endl;
-          //std::cout << (int)(cosign) << std::endl << std::endl;
-
           flowcountercompare = (int)(cosign);
           drawNewFace = true;
         }
@@ -132,6 +160,7 @@ public:
 	  {
             currentFace = base;
 	    buttonPressed = false;
+            rave_mode = false;
 	  }
 	}
 	else
@@ -143,26 +172,37 @@ public:
 	    if(button == 1)
 	    {
               currentFace = sad;
+              rave_mode = false;
 	    }
 	    else if(button == 2)
             {
               currentFace = angry;
+              rave_mode = false;
 	    }
 	    else if(button == 3)
 	    {
               currentFace = happy;
+              rave_mode = false;
             }
             else if(button == 4)
             {
               currentFace = uwu;
+              rave_mode = false;
             }
             else if(button == 5)
             {
               currentFace = poker;
+              rave_mode = false;
             }
             else if(button == 6)
             {
               currentFace = heart;
+              rave_mode = false;
+            }
+            else if(button == 7)
+            {
+              rave_mode = true;
+              currentFace = happy;
             }
 	 }
 	}
@@ -220,12 +260,17 @@ public:
 
         if(drawNewFace == true)
         {
-          drawFaceInput(currentFace, (int)(cosign));
+          if(rave_mode)
+          {
+            drawFaceInput(currentFace, (int)(cosign), rave_r, rave_b, rave_g);
+          }
+          else
+          {
+            drawFaceInput(currentFace, (int)(cosign), 0, 255, 0);
+          }
         }
+
      }
-
-     flowcounter = flowcounter % (10 * flowcycle);
-
 
 
  }

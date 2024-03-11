@@ -11,6 +11,26 @@ static void InterruptHandler(int signo) {
 }
 
 
+class IntTuple {
+  public:
+    IntTuple(int x_input, int y_input)
+    {
+      coords[0] = x_input;
+      coords[1] = y_input;
+    }
+    int get_x()
+    {
+      return coords[0];
+    }
+    int get_y()
+    {
+      return coords[1];
+    }
+  private:
+    int coords[2];
+};
+
+
 class Runner {
 protected:
   Runner(Canvas *canvas) : canvas_(canvas) {}
@@ -18,7 +38,7 @@ protected:
 
 public:
   // Half a face mirrored
-  void drawFaceInput(bool** face, int floater) {
+  void drawFaceInput(bool** face, int floater, int r, int b, int g) {
     canvas()->Clear();
     for(int i=0; i < 64; i++)
     {
@@ -26,14 +46,14 @@ public:
       {
         if(face[j][i] == true)
         {
-          canvas()->SetPixel(i, j-floater, 0, 255, 0);
-          canvas()->SetPixel(128-i, j-floater, 0, 255, 0);
+          canvas()->SetPixel(i, j-floater, r, b, g);
+          canvas()->SetPixel(128-i, j-floater, r, b, g);
         }
       }
     }
   }
   // Full face not mirrored
-  void drawMenuInput(bool** face, int floater) {
+  void drawFullInput(bool** face, int floater) {
     canvas()->Clear();
     for(int i = 0; i < 128; i++)
     {

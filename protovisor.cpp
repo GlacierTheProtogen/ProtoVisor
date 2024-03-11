@@ -37,6 +37,10 @@ using std::max;
 std::chrono::system_clock::time_point* controller1buttons = new std::chrono::system_clock::time_point[15];
 std::chrono::system_clock::time_point* controller2buttons = new std::chrono::system_clock::time_point[15];
 
+int g_red = 0;
+int g_blue = 255;
+int g_green = 0;
+
 
 static int usage(const char *progname) {
   fprintf(stderr, "usage: %s <options> -D <demo-nr> [optional parameter]\n",

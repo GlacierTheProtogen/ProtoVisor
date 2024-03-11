@@ -2,6 +2,7 @@
 #include "face.h"
 #include "led-matrix.h"
 #include "controller.cpp"
+#include "snake.cpp"
 
 
 #include <limits.h>
@@ -12,27 +13,6 @@
 
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
-
-
-class IntTuple {
-  public:
-    IntTuple(int x_input, int y_input)
-    {
-      coords[0] = x_input;
-      coords[1] = y_input;
-    }
-    int get_x()
-    {
-      return coords[0];
-    }
-    int get_y()
-    {
-      return coords[1];
-    }
-  private:
-    int coords[2];
-};
-
 
 void changeOption(bool** face, IntTuple* prevcoords, IntTuple* newcoords)
 {
@@ -53,8 +33,8 @@ void changeOption(bool** face, IntTuple* prevcoords, IntTuple* newcoords)
     }
   }
 
+};
 
-}
 
 class MenuFace : public Runner {
 public:
@@ -94,7 +74,7 @@ public:
     MenuItems.insert(std::make_pair(5, BackCoords));
 
     changeOption(currentMenu, SettingsCoords, SettingsCoords);
-    drawMenuInput(currentMenu, 0);
+    drawFullInput(currentMenu, 0);
 
     // Treat the menu items as an array. Manipulate this number based on what
     // Input the user presses on the controller. Finally, map out this 
@@ -173,6 +153,19 @@ public:
             {
               sel = sel + 3;
             }
+            else if(button == 2 && sel == 3)
+            {
+              Runner * runner = new Snake(matrix_);
+              runner->Run();
+
+              delete runner;
+            }
+
+            else if(button == 4 || (button == 2 && sel == 5))
+            {
+              return;
+            }
+
 
 
             //sel = abs(sel % 6);
@@ -186,13 +179,9 @@ public:
 
         if(drawNewFace == true)
         {
-          drawMenuInput(currentMenu, (int)(cosign));
+          drawFullInput(currentMenu, (int)(cosign));
         }
      }
-
-     flowcounter = flowcounter % (10 * flowcycle);
-
-
 
  }
  private:
