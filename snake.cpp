@@ -17,19 +17,78 @@ extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
 
 
-newCoords(std::deque<IntTuple
 
-void drawNewFood(std::deque<IntTuple*> &food, int iter)
+int getRandInt()
 {
+  /* Return a random integer, based off of millisec instead of
+  second.
+  */
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
-
   srand((time_t)ts.tv_nsec);
 
-  int xrand = (ran
-
+  return rand();
 }
 
+void switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &food, int x, int y)
+{
+  /* Reassign one of the food blips, make sure that it is not
+  already true on the board.
+  */
+
+  for(int i = 0; i < food.size(); i++)
+  {
+    if(x == food[i]->get_x() && y == food[i]->get_y())
+    {
+
+      int new_x;
+      int new_y;
+
+      bool repeat = false;
+      while(!repeat)
+      {
+
+        repeat = true;
+
+        int xrand = getRandInt() % 31;
+        int yrand = getRandInt() % 127;
+
+        xrand = xrand - (xrand % 2);
+        yrand = yrand - (yrand % 2);
+
+        for(int i = 0; i < snake1.size(); i++)
+        {
+          if(snake1[i]->get_x() == xrand && snake1[i]->get_y() == yrand)
+          {
+            repeat = false;
+          }
+        }
+
+        for(int i = 0; i < food.size(); i++)
+        {
+          if(food[i]->get_x() == xrand && food[i]->get_y() == yrand)
+          {
+            repeat = false;
+          }
+        }
+
+        new_x = xrand;
+        new_y = yrand;
+
+      }
+
+      std::cout << new_x << std::endl;
+      std::cout << new_y << std::endl;
+
+      food[i]->set_x(new_x);
+      food[i]->set_y(new_y);
+
+    }
+  }
+
+  return;
+
+}
 
 void prepareFood(std::deque<IntTuple*> &food)
 {
@@ -40,13 +99,8 @@ void prepareFood(std::deque<IntTuple*> &food)
 
   for(int i = 0; i < 6; i++)
   {
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-
-    srand((time_t)ts.tv_nsec);
-
-    int xrand = (rand() % 31);
-    int yrand = (rand() % 127);
+    int xrand = (getRandInt() % 31);
+    int yrand = (getRandInt() % 127);
 
     xrand = xrand - (xrand % 2);
     yrand = yrand - (yrand % 2);
@@ -222,11 +276,28 @@ public:
           x_axis = x_axis + 2;
         }
 
-        bool collide = checkCollision(p1snake, x_axis, y_axis);
+        bool tailCollide = checkCollision(p1snake, x_axis, y_axis);
 
-        if(collide == true)
+        if(checkCollision(p1snake, x_axis, y_axis))
         {
           return;
+        }
+
+        bool foodCollide = checkCollision(Food, x_axis, y_axis);
+
+
+        if(!foodCollide)
+        {
+          p1snake.pop_front();
+        }
+        else
+        {
+          switchFood(p1snake, Food, x_axis, y_axis);
+        }
+
+        for(int i = 0; i < Food.size(); i++)
+        {
+            drawBlip(currentMenu, Food[i], true);
         }
 
         IntTuple* NewHead = new IntTuple(x_axis, y_axis);
@@ -234,14 +305,13 @@ public:
 
         IntTuple* Tail = p1snake.front();
 
-        drawBlip(currentMenu, Tail, false);
-
-        p1snake.pop_front();
-
         for(int i = 0; i < p1snake.size(); i++)
         {
           drawBlip(currentMenu, p1snake[i], true);
         }
+
+        drawBlip(currentMenu, Tail, false);
+
         drawFullInput(currentMenu, 0);
 
      }

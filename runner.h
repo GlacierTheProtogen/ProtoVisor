@@ -26,6 +26,14 @@ class IntTuple {
     {
       return coords[1];
     }
+    void set_x(int x)
+    {
+      coords[0] = x;
+    }
+    void set_y(int y)
+    {
+      coords[1] = y;
+    }
   private:
     int coords[2];
 };
