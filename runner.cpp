@@ -60,7 +60,7 @@ public:
     int prev_rave_switch = 0;
     int rave_loop = 200000;
 
-    drawFaceInput(base, 0, 0, 255, 0);
+    drawFaceInput(base, 0, 0, 0, 255);
 
     while (!interrupt_received) {
 
@@ -266,7 +266,7 @@ public:
           }
           else
           {
-            drawFaceInput(currentFace, (int)(cosign), 0, 255, 0);
+            drawFaceInput(currentFace, (int)(cosign), 0, 0, 255);
           }
         }
 

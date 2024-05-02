@@ -3,7 +3,7 @@
 #include "led-matrix.h"
 #include "controller.cpp"
 #include "snake.cpp"
-
+#include "2player-menu.cpp"
 
 #include <limits.h>
 #include <math.h>
@@ -13,27 +13,6 @@
 
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
-
-void changeOption(bool** face, IntTuple* prevcoords, IntTuple* newcoords)
-{
-
-  for(int i = prevcoords->get_x(); i < prevcoords->get_x() + 2; i++)
-  {
-     for(int j = prevcoords->get_y(); j < prevcoords->get_y() + 2; j++)
-     {
-       face[j][i]=false;
-     }
-  }
-
-  for(int i = newcoords->get_x(); i < newcoords->get_x() + 2; i++)
-  {
-    for(int j = newcoords->get_y(); j < newcoords->get_y() +2; j++)
-    {
-      face[j][i]=true;
-    }
-  }
-
-};
 
 
 class MenuFace : public Runner {
@@ -155,10 +134,17 @@ public:
             }
             else if(button == 2 && sel == 3)
             {
-              Runner * runner = new Snake(matrix_);
-              runner->Run();
+              TwoPlayerMenuFace * twoplayer = new TwoPlayerMenuFace(matrix_);
+              int option = twoplayer->GetAnswer();
 
-              delete runner;
+              if(option > 0)
+              {
+                Snake * runner = new Snake(matrix_);
+                runner->RunSnake(option);
+                delete runner;
+              }
+
+              delete twoplayer;
             }
 
             else if(button == 4 || (button == 2 && sel == 5))

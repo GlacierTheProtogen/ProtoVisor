@@ -77,9 +77,6 @@ void switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &food, int 
 
       }
 
-      std::cout << new_x << std::endl;
-      std::cout << new_y << std::endl;
-
       food[i]->set_x(new_x);
       food[i]->set_y(new_y);
 
@@ -168,8 +165,14 @@ public:
   Snake(RGBMatrix *m) : Runner(m), matrix_(m) {
     off_screen_canvas_ = m->CreateFrameCanvas();
   }
-  void Run() override {
+  virtual void Run() override {
+    std::cout << "Run function for snake is RunSnake()" << std::endl;
+  }
+  void RunSnake(int players) {
     uint32_t continuum = 0;
+
+   std::cout << "No of players" << std::endl;
+   std::cout << players << std::endl;
 
     bool** menu = FileToFace("blank-base", true);
 
@@ -182,20 +185,36 @@ public:
 
     int direction = 4; // 1: left, 2: down, 3 : up, 4: right
 
-    IntTuple* Start1 = new IntTuple(2, 4);
-    IntTuple* Start2 = new IntTuple(2, 6);
-    IntTuple* Start3 = new IntTuple(2, 8);
-    IntTuple* Start4 = new IntTuple(2, 10);
-    IntTuple* Start5 = new IntTuple(2, 12);
-    IntTuple* Start6 = new IntTuple(2, 14);
+    IntTuple* Player1Start1 = new IntTuple(2, 4);
+    IntTuple* Player1Start2 = new IntTuple(2, 6);
+    IntTuple* Player1Start3 = new IntTuple(2, 8);
+    IntTuple* Player1Start4 = new IntTuple(2, 10);
+    IntTuple* Player1Start5 = new IntTuple(2, 12);
+    IntTuple* Player1Start6 = new IntTuple(2, 14);
+
+    IntTuple* Player2Start1 = new IntTuple(2, 128);
+    IntTuple* Player2Start2 = new IntTuple(2, 126);
+    IntTuple* Player2Start3 = new IntTuple(2, 124);
+    IntTuple* Player2Start4 = new IntTuple(2, 122);
+    IntTuple* Player2Start5 = new IntTuple(2, 120);
+    IntTuple* Player2Start6 = new IntTuple(2, 122);
 
     std::deque<IntTuple*> p1snake;
-    p1snake.push_back(Start1);
-    p1snake.push_back(Start2);
-    p1snake.push_back(Start3);
-    p1snake.push_back(Start4);
-    p1snake.push_back(Start5);
-    p1snake.push_back(Start6);
+    std::deque<IntTuple*> p2snake;
+
+    p1snake.push_back(Player1Start1);
+    p1snake.push_back(Player1Start2);
+    p1snake.push_back(Player1Start3);
+    p1snake.push_back(Player1Start4);
+    p1snake.push_back(Player1Start5);
+    p1snake.push_back(Player1Start6);
+
+    p2snake.push_back(Player2Start1);
+    p2snake.push_back(Player2Start2);
+    p2snake.push_back(Player2Start3);
+    p2snake.push_back(Player2Start4);
+    p2snake.push_back(Player2Start5);
+    p2snake.push_back(Player2Start6);
 
     drawFullInput(currentMenu, 0);
 
@@ -320,5 +339,6 @@ public:
  private:
    RGBMatrix *const matrix_;
    FrameCanvas *off_screen_canvas_;
+   int players;
 };
 

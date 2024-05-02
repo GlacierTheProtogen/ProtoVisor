@@ -69,7 +69,7 @@ public:
       {
         if(face[j][i] == true)
         {
-          canvas()->SetPixel(i, j-floater, 0, 255, 0);
+          canvas()->SetPixel(i, j-floater, 0, 0, 255);
         }
       }
     }
