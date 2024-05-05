@@ -190,6 +190,7 @@ void prepareFood(std::deque<IntTuple*> &food)
 
 }
 
+
 bool checkCollision(std::deque<IntTuple*> &p1snake, int x, int y)
 {
 
@@ -229,6 +230,19 @@ public:
   }
   virtual void Run() override {
     std::cout << "Run function for snake is RunSnake()" << std::endl;
+  }
+  void drawBlipArray(std::deque<IntTuple*> &array, int r, int g, int b)
+  {
+    for(int i = 0; i < array.size(); i++)
+    {
+      for(int x = array[i]->get_x(); x < array[i]->get_x() + 2; x++)
+      {
+        for(int y = array[i]->get_y(); y < array[i]->get_y() + 2; y++)
+        {
+          canvas()->SetPixel(y, x, r, g, b);
+        }
+      }
+    }
   }
   void RunSnake(int players) {
     uint32_t continuum = 0;
@@ -512,7 +526,17 @@ public:
 
         }
 
-        drawFullInput(currentMenu, 0);
+        //drawFullInput(currentMenu, 0);
+
+        canvas()->Clear();
+
+        drawBlipArray(Food, 255, 255, 255);
+        drawBlipArray(p1snake, 0, 0, 255);
+
+        if(players == 2)
+        {
+          drawBlipArray(p2snake, 255, 165, 0);
+        }
 
      }
 
