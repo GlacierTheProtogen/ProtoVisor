@@ -37,6 +37,9 @@ menu.o : menu.cpp menu.h
 2player-menu.o : 2player-menu.cpp
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
+countdown.o : countdown.cpp runner.h
+	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
+
 snake.o : snake.cpp
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 

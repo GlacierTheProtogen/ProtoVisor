@@ -2,6 +2,7 @@
 #include "face.h"
 #include "led-matrix.h"
 #include "controller.cpp"
+#include "countdown.cpp"
 #include "snake.cpp"
 #include "2player-menu.cpp"
 
@@ -139,6 +140,8 @@ public:
 
               if(option > 0)
               {
+                CountDown * countdown = new CountDown(matrix_);
+                countdown->Run();
                 Snake * runner = new Snake(matrix_);
                 runner->RunSnake(option);
                 delete runner;
