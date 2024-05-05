@@ -17,7 +17,6 @@ extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
 
 
-
 int getRandInt()
 {
   /* Return a random integer, based off of millisec instead of
@@ -30,7 +29,7 @@ int getRandInt()
   return rand();
 }
 
-void switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &food, int x, int y)
+void singleP_switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &food, int x, int y)
 {
   /* Reassign one of the food blips, make sure that it is not
   already true on the board.
@@ -87,6 +86,67 @@ void switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &food, int 
 
 }
 
+
+void multiP_switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &snake2, std::deque<IntTuple*> &food, int p1x, int p1y, int p2x, int p2y)
+{
+  /* Reassign one of the food blips, make sure that it is not
+  already true on the board. Accounts for 2 snakes.
+  */
+
+  for(int i = 0; i < food.size(); i++)
+  {
+    if((p1x == food[i]->get_x() && p1y == food[i]->get_y()) || (p2x == food[i]->get_x() && p2y == food[i]->get_y()))
+    {
+
+      int new_x;
+      int new_y;
+
+      bool repeat = false;
+      while(!repeat)
+      {
+
+        repeat = true;
+
+        int xrand = getRandInt() % 31;
+        int yrand = getRandInt() % 127;
+
+        xrand = xrand - (xrand % 2);
+        yrand = yrand - (yrand % 2);
+
+        for(int i = 0; i < snake1.size(); i++)
+        {
+          if((snake1[i]->get_x() == xrand && snake1[i]->get_y() == yrand) || (snake2[i]->get_x() == xrand && snake2[i]->get_y() == yrand))
+          {
+            repeat = false;
+          }
+        }
+
+        for(int i = 0; i < food.size(); i++)
+        {
+          if(food[i]->get_x() == xrand && food[i]->get_y() == yrand)
+          {
+            repeat = false;
+          }
+        }
+
+        new_x = xrand;
+        new_y = yrand;
+
+      }
+
+      food[i]->set_x(new_x);
+      food[i]->set_y(new_y);
+
+    }
+
+  }
+
+  return;
+
+}
+
+
+
 void prepareFood(std::deque<IntTuple*> &food)
 {
   /* 6 random coordinates that are initialized. Make sure that
@@ -132,18 +192,20 @@ void prepareFood(std::deque<IntTuple*> &food)
 
 bool checkCollision(std::deque<IntTuple*> &p1snake, int x, int y)
 {
+
   for(int i = 0; i < p1snake.size(); i++)
   {
     if(p1snake[i]->get_x() == x && p1snake[i]->get_y() == y)
     {
       return true;
     }
-
-    if(x < 0 || x == 32 || y < 0 || y == 128)
-    {
-      return true;
-    }
   }
+
+  if(x < 0 || x == 32 || y < 0 || y == 128)
+  {
+    return true;
+  }
+
 
   return false;
 }
@@ -171,19 +233,20 @@ public:
   void RunSnake(int players) {
     uint32_t continuum = 0;
 
-   std::cout << "No of players" << std::endl;
-   std::cout << players << std::endl;
-
     bool** menu = FileToFace("blank-base", true);
 
     int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
     int flowcounter = 0; // Incremented integer that is used for the cosign function.
     int flowcountercompare = -8; // Used to keep track of the last integer that was used in the cosign function.
-    int button; // Button that is pressed.
-    bool buttonPressed = false; // Wether or not a button is pressed.
+    int p1button; // Button that is pressed.
+    int p2button;
+    bool p1buttonPressed = false; // Wether or not a button is pressed.
+    bool p2buttonPressed = false;
     bool** currentMenu = menu; // Current face
 
-    int direction = 4; // 1: left, 2: down, 3 : up, 4: right
+    int p1direction = 4; // 1: left, 2: down, 3 : up, 4: right
+    int p2direction = 1;
+
 
     IntTuple* Player1Start1 = new IntTuple(2, 4);
     IntTuple* Player1Start2 = new IntTuple(2, 6);
@@ -192,12 +255,12 @@ public:
     IntTuple* Player1Start5 = new IntTuple(2, 12);
     IntTuple* Player1Start6 = new IntTuple(2, 14);
 
-    IntTuple* Player2Start1 = new IntTuple(2, 128);
-    IntTuple* Player2Start2 = new IntTuple(2, 126);
-    IntTuple* Player2Start3 = new IntTuple(2, 124);
-    IntTuple* Player2Start4 = new IntTuple(2, 122);
-    IntTuple* Player2Start5 = new IntTuple(2, 120);
-    IntTuple* Player2Start6 = new IntTuple(2, 122);
+    IntTuple* Player2Start1 = new IntTuple(2, 124);
+    IntTuple* Player2Start2 = new IntTuple(2, 122);
+    IntTuple* Player2Start3 = new IntTuple(2, 120);
+    IntTuple* Player2Start4 = new IntTuple(2, 118);
+    IntTuple* Player2Start5 = new IntTuple(2, 116);
+    IntTuple* Player2Start6 = new IntTuple(2, 114);
 
     std::deque<IntTuple*> p1snake;
     std::deque<IntTuple*> p2snake;
@@ -236,100 +299,218 @@ public:
 
         for(int i = 0; i < 60; i++)
         {
-  	  button = current_button_pushed(controller1buttons);
+  	  p1button = current_button_pushed(controller1buttons);
+	  p2button = current_button_pushed(controller2buttons);
 
-        // FIXME: The number of below if statements sucks. Maybe a dictionary of pointers?
+          // FIXME: The number of below if statements sucks. Maybe a dictionary of pointers?
 
-	  if(buttonPressed == true)
+	  if(p1buttonPressed == true)
  	  {
-	    if(button == 0)
+	    if(p1button == 0)
 	    {
-	      buttonPressed = false;
+	      p1buttonPressed = false;
 	    }
 	  }
 	  else
 	  {
-	    if(button != 0)
+	    if(p1button != 0)
 	    {
-	      buttonPressed = true;
+	      p1buttonPressed = true;
 
-	      if((button == 10 || button == 6) && direction != 3)
+	      if((p1button == 10 || p1button == 6) && p1direction != 3)
               {
-                direction = 2;
+                p1direction = 2;
 	      }
-	      else if((button == 9 || button == 5) && direction != 2)
+	      else if((p1button == 9 || p1button == 5) && p1direction != 2)
 	      {
-                direction = 3;
+                p1direction = 3;
               }
-              else if((button == 12 || button == 8) && direction != 1)
+              else if((p1button == 12 || p1button == 8) && p1direction != 1)
               {
-                direction = 4;
+                p1direction = 4;
               }
-              else if((button == 7 || button == 11) && direction != 4)
+              else if((p1button == 7 || p1button == 11) && p1direction != 4)
               {
-                direction = 1;
+                p1direction = 1;
               }
-
+            }
 	   }
-	  }
+
+
+           if(players == 2)
+           {
+	      if(p2buttonPressed == true)
+	      {
+                if(p2button == 0)
+                {
+                  p2buttonPressed = false;
+                }
+	      }
+	      else
+              {
+                if(p2button != 0)
+                {
+                  p2buttonPressed = true;
+
+                  if((p2button == 10 || p2button == 6) && p2direction != 3)
+                  {
+                    p2direction = 2;
+                  }
+                  else if((p2button == 9 || p2button == 5) && p2direction != 2)
+                  {
+                    p2direction = 3;
+                  }
+                  else if((p2button == 12 || p2button == 8) && p2direction != 1)
+                  {
+                    p2direction = 4;
+                  }
+                  else if((p2button == 7 || p2button == 11) && p2direction != 4)
+                  {
+                    p2direction = 1;
+                  }
+                }
+             }
+          }
           usleep(5000);
+
         }
 
-        int x_axis = p1snake.back()->get_x();
-        int y_axis = p1snake.back()->get_y();
+        int p1x_axis = p1snake.back()->get_x();
+        int p1y_axis = p1snake.back()->get_y();
 
-        if(direction == 4)
+        int p2x_axis = p2snake.back()->get_x();
+        int p2y_axis = p2snake.back()->get_y();
+
+        if(p1direction == 4)
         {
-          y_axis = y_axis + 2;
+          p1y_axis = p1y_axis + 2;
         }
-        else if(direction == 1)
+        else if(p1direction == 1)
         {
-          y_axis = y_axis - 2;
+          p1y_axis = p1y_axis - 2;
         }
-        else if(direction == 3)
+        else if(p1direction == 3)
         {
-          x_axis = x_axis - 2;
+          p1x_axis = p1x_axis - 2;
         }
-        else if(direction == 2)
+        else if(p1direction == 2)
         {
-          x_axis = x_axis + 2;
+          p1x_axis = p1x_axis + 2;
         }
 
-        bool tailCollide = checkCollision(p1snake, x_axis, y_axis);
 
-        if(checkCollision(p1snake, x_axis, y_axis))
+        if(players == 2)
         {
+          if(p2direction == 4)
+          {
+            p2y_axis = p2y_axis + 2;
+          }
+          else if(p2direction == 1)
+          {
+            p2y_axis = p2y_axis - 2;
+          }
+          else if(p2direction == 3)
+          {
+            p2x_axis = p2x_axis - 2;
+          }
+          else if(p2direction == 2)
+          {
+            p2x_axis = p2x_axis + 2;
+          }
+
+        }
+
+
+        if(checkCollision(p1snake, p1x_axis, p1y_axis))
+        {
+          // Player 2 victory
           return;
         }
 
-        bool foodCollide = checkCollision(Food, x_axis, y_axis);
 
+        if(players == 2)
+        {
+          if(checkCollision(p2snake, p2x_axis, p2y_axis))
+          {
+            // Player 1 victory
+            return;
+          }
+        }
 
-        if(!foodCollide)
+        bool p1foodCollide = checkCollision(Food, p1x_axis, p1y_axis);
+        bool p2foodCollide = checkCollision(Food, p2x_axis, p2y_axis);
+
+        //if(!foodCollide)
+        //{
+        //  p1snake.pop_front();
+        //}
+        //else
+        //{
+        //  switchFood(p1snake, Food, x_axis, y_axis);
+        //}
+
+        if(p1foodCollide && p2foodCollide)
         {
-          p1snake.pop_front();
+          multiP_switchFood(p1snake, p2snake, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
         }
-        else
-        {
-          switchFood(p1snake, Food, x_axis, y_axis);
-        }
+        else if(p1foodCollide)
+	{
+	  if(players == 2)
+          {
+	    multiP_switchFood(p1snake, p2snake, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
+	    p2snake.pop_front();
+          }
+          else
+	  {
+	    singleP_switchFood(p1snake, Food, p1x_axis, p1y_axis);
+	  }
+
+	}
+	else if(p2foodCollide)
+	{
+	  multiP_switchFood(p1snake, p2snake, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
+	}
+	else
+	{
+	  p1snake.pop_front();
+	  if(players == 2)
+	  {
+	    p2snake.pop_front();
+	  }
+	}
 
         for(int i = 0; i < Food.size(); i++)
         {
             drawBlip(currentMenu, Food[i], true);
         }
 
-        IntTuple* NewHead = new IntTuple(x_axis, y_axis);
-        p1snake.push_back(NewHead);
+        IntTuple* P1NewHead = new IntTuple(p1x_axis, p1y_axis);
+        p1snake.push_back(P1NewHead);
 
-        IntTuple* Tail = p1snake.front();
+        IntTuple* P1Tail = p1snake.front();
 
         for(int i = 0; i < p1snake.size(); i++)
         {
           drawBlip(currentMenu, p1snake[i], true);
         }
 
-        drawBlip(currentMenu, Tail, false);
+        drawBlip(currentMenu, P1Tail, false);
+
+        if(players == 2)
+        {
+          IntTuple* P2NewHead = new IntTuple(p2x_axis, p2y_axis);
+          p2snake.push_back(P2NewHead);
+
+          IntTuple* P2Tail = p2snake.front();
+
+          for(int i = 0; i < p2snake.size(); i++)
+          {
+            drawBlip(currentMenu, p2snake[i], true);
+          }
+
+          drawBlip(currentMenu, P2Tail, false);
+
+        }
 
         drawFullInput(currentMenu, 0);
 
