@@ -115,11 +115,20 @@ void multiP_switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &sna
 
         for(int i = 0; i < snake1.size(); i++)
         {
-          if((snake1[i]->get_x() == xrand && snake1[i]->get_y() == yrand) || (snake2[i]->get_x() == xrand && snake2[i]->get_y() == yrand))
+          if(snake1[i]->get_x() == xrand && snake1[i]->get_y() == yrand)
           {
             repeat = false;
           }
         }
+
+        for(int i = 0; i < snake2.size(); i++)
+        {
+          if(snake2[i]->get_x() == xrand && snake2[i]->get_y() == yrand)
+          {
+            repeat = false;
+          }
+        }
+
 
         for(int i = 0; i < food.size(); i++)
         {
@@ -454,25 +463,17 @@ public:
         bool p1foodCollide = checkCollision(Food, p1x_axis, p1y_axis);
         bool p2foodCollide = checkCollision(Food, p2x_axis, p2y_axis);
 
-        //if(!foodCollide)
-        //{
-        //  p1snake.pop_front();
-        //}
-        //else
-        //{
-        //  switchFood(p1snake, Food, x_axis, y_axis);
-        //}
-
         if(p1foodCollide && p2foodCollide)
         {
           multiP_switchFood(p1snake, p2snake, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
         }
         else if(p1foodCollide)
 	{
+
 	  if(players == 2)
           {
+            p2snake.pop_front();
 	    multiP_switchFood(p1snake, p2snake, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
-	    p2snake.pop_front();
           }
           else
 	  {
@@ -482,6 +483,7 @@ public:
 	}
 	else if(p2foodCollide)
 	{
+          p1snake.pop_front();
 	  multiP_switchFood(p1snake, p2snake, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
 	}
 	else

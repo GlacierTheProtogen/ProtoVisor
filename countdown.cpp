@@ -15,11 +15,11 @@ public:
     bool** one = FileToFace("one", true);
     int delaytime = 1000000;
 
-    drawFaceInput(three, 0, 0, 0, 255);
+    drawPortalColors(three);
     usleep(delaytime);
-    drawFaceInput(two, 0, 0, 0, 255);
+    drawPortalColors(two);
     usleep(delaytime);
-    drawFaceInput(one, 0, 0, 0, 255);
+    drawPortalColors(one);
     usleep(delaytime);
 
     return;

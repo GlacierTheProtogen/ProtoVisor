@@ -60,6 +60,30 @@ public:
       }
     }
   }
+  void drawPortalColors(bool** face)
+  {
+    canvas()->Clear();
+    for(int i = 0; i < 64; i++)
+    {
+      for(int j=0; j < 32; j++)
+      {
+        if(face[j][i] == true)
+        {
+          canvas()->SetPixel(i, j, 0, 0, 255);
+        }
+      }
+    }
+    for(int i = 64; i < 128; i++)
+    {
+      for(int j=0; j < 32; j++)
+      {
+        if(face[j][i] == true)
+        {
+          canvas()->SetPixel(i, j, 255, 165, 0);
+        }
+      }
+    }
+  }
   // Full face not mirrored
   void drawFullInput(bool** face, int floater) {
     canvas()->Clear();
