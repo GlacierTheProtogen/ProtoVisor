@@ -45,7 +45,7 @@ public:
     IntTuple* TwoRightCoords = new IntTuple(66, 14);
 
     changeOption(currentMenu, OneRightCoords, OneLeftCoords);
-    drawFullInput(currentMenu, 0);
+    drawFullInput(currentMenu, 0, 0, 0, 255);
 
     int curselection = 1;
 
@@ -130,7 +130,7 @@ public:
 
         if(drawNewFace == true)
         {
-          drawFullInput(currentMenu, (int)(0));
+          drawFullInput(currentMenu, (int)(0), 0, 0, 255);
         }
      }
 

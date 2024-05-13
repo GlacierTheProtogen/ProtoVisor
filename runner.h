@@ -85,7 +85,7 @@ public:
     }
   }
   // Full face not mirrored
-  void drawFullInput(bool** face, int floater) {
+  void drawFullInput(bool** face, int floater, int r, int b, int g) {
     canvas()->Clear();
     for(int i = 0; i < 128; i++)
     {
@@ -93,7 +93,7 @@ public:
       {
         if(face[j][i] == true)
         {
-          canvas()->SetPixel(i, j-floater, 0, 0, 255);
+          canvas()->SetPixel(i, j-floater, r, b, g);
         }
       }
     }

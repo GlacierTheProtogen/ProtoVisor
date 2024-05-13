@@ -54,7 +54,7 @@ public:
     MenuItems.insert(std::make_pair(5, BackCoords));
 
     changeOption(currentMenu, SettingsCoords, SettingsCoords);
-    drawFullInput(currentMenu, 0);
+    drawFullInput(currentMenu, 0, 0, 0, 255);
 
     // Treat the menu items as an array. Manipulate this number based on what
     // Input the user presses on the controller. Finally, map out this 
@@ -168,7 +168,7 @@ public:
 
         if(drawNewFace == true)
         {
-          drawFullInput(currentMenu, (int)(cosign));
+          drawFullInput(currentMenu, (int)(cosign), 0, 0, 255);
         }
      }
 

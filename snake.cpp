@@ -1,7 +1,7 @@
 #include "runner.h"
 #include "face.h"
 #include "controller.cpp"
-
+#include "victory.cpp"
 
 #include <limits.h>
 #include <math.h>
@@ -220,6 +220,19 @@ bool checkCollision(std::deque<IntTuple*> &p1snake, int x, int y)
   return false;
 }
 
+bool checkVictory(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &snake2)
+{
+  for(int i = 0; i < snake1.size(); i++)
+  {
+    if(snake1[i]->get_x() == snake2.back()->get_x() && snake1[i]->get_y() == snake2.back()->get_y())
+    {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 //given a point, draw a 2X2 square from the top left.
 void drawBlip(bool** chart, IntTuple* coords, bool value)
 {
@@ -302,7 +315,7 @@ public:
     p2snake.push_back(Player2Start5);
     p2snake.push_back(Player2Start6);
 
-    drawFullInput(currentMenu, 0);
+    drawFullInput(currentMenu, 0, 0, 0, 255);
 
     std::deque<IntTuple*> Food;
     prepareFood(Food);
@@ -528,7 +541,23 @@ public:
 
         }
 
-        //drawFullInput(currentMenu, 0);
+        bool check1victory = checkVictory(p1snake, p2snake);
+
+        if(check1victory)
+        {
+          Victory * victory = new Victory(matrix_);
+          victory->VictorRun(1);
+          return;
+        }
+
+        bool check2victory = checkVictory(p2snake, p1snake);
+
+        if(check2victory)
+        {
+          Victory * victory = new Victory(matrix_);
+          victory->VictorRun(2);
+          return;
+        }
 
         canvas()->Clear();
 
