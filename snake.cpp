@@ -30,64 +30,6 @@ int getRandInt()
   return rand();
 }
 
-void singleP_switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &food, int x, int y)
-{
-  /* Reassign one of the food blips, make sure that it is not
-  already true on the board.
-  */
-
-  for(int i = 0; i < food.size(); i++)
-  {
-    if(x == food[i]->get_x() && y == food[i]->get_y())
-    {
-
-      int new_x;
-      int new_y;
-
-      bool repeat = false;
-      while(!repeat)
-      {
-
-        repeat = true;
-
-        int xrand = getRandInt() % 31;
-        int yrand = getRandInt() % 127;
-
-        xrand = xrand - (xrand % 2);
-        yrand = yrand - (yrand % 2);
-
-        for(int i = 0; i < snake1.size(); i++)
-        {
-          if(snake1[i]->get_x() == xrand && snake1[i]->get_y() == yrand)
-          {
-            repeat = false;
-          }
-        }
-
-        for(int i = 0; i < food.size(); i++)
-        {
-          if(food[i]->get_x() == xrand && food[i]->get_y() == yrand)
-          {
-            repeat = false;
-          }
-        }
-
-        new_x = xrand;
-        new_y = yrand;
-
-      }
-
-      food[i]->set_x(new_x);
-      food[i]->set_y(new_y);
-
-    }
-  }
-
-  return;
-
-}
-
-
 void prepareFood(std::deque<IntTuple*> &food)
 {
   /* 6 random coordinates that are initialized. Make sure that
