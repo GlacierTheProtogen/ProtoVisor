@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <vector>
 
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
@@ -85,75 +86,6 @@ void singleP_switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &fo
   return;
 
 }
-
-
-void multiP_switchFood(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &snake2, std::deque<IntTuple*> &food, int p1x, int p1y, int p2x, int p2y)
-{
-  /* Reassign one of the food blips, make sure that it is not
-  already true on the board. Accounts for 2 snakes.
-  */
-
-  for(int i = 0; i < food.size(); i++)
-  {
-    if((p1x == food[i]->get_x() && p1y == food[i]->get_y()) || (p2x == food[i]->get_x() && p2y == food[i]->get_y()))
-    {
-
-      int new_x;
-      int new_y;
-
-      bool repeat = false;
-      while(!repeat)
-      {
-
-        repeat = true;
-
-        int xrand = getRandInt() % 31;
-        int yrand = getRandInt() % 127;
-
-        xrand = xrand - (xrand % 2);
-        yrand = yrand - (yrand % 2);
-
-        for(int i = 0; i < snake1.size(); i++)
-        {
-          if(snake1[i]->get_x() == xrand && snake1[i]->get_y() == yrand)
-          {
-            repeat = false;
-          }
-        }
-
-        for(int i = 0; i < snake2.size(); i++)
-        {
-          if(snake2[i]->get_x() == xrand && snake2[i]->get_y() == yrand)
-          {
-            repeat = false;
-          }
-        }
-
-
-        for(int i = 0; i < food.size(); i++)
-        {
-          if(food[i]->get_x() == xrand && food[i]->get_y() == yrand)
-          {
-            repeat = false;
-          }
-        }
-
-        new_x = xrand;
-        new_y = yrand;
-
-      }
-
-      food[i]->set_x(new_x);
-      food[i]->set_y(new_y);
-
-    }
-
-  }
-
-  return;
-
-}
-
 
 
 void prepareFood(std::deque<IntTuple*> &food)
@@ -266,6 +198,96 @@ public:
       }
     }
   }
+  void singleP_switchFood(bool** face, std::deque<IntTuple*> &food, int x, int y)
+  {
+    /* Reassign one of the food blips, make sure that it is not
+    already true on the board.
+    */
+
+    for(int i = 0; i < food.size(); i++)
+    {
+      if(x == food[i]->get_x() && y == food[i]->get_y())
+      {
+
+
+        std::vector<int> free_x_values;
+        std::vector<int> free_y_values;
+
+        for(int i = 0; i < 32; i +=2)
+        {
+          for(int j = 0; j < 128; j +=2)
+          {
+            if(face[i][j] == false)
+            {
+              free_x_values.push_back(i);
+              free_y_values.push_back(j);
+            }
+          }
+        }
+
+        int index = getRandInt() % free_x_values.size() - 1;
+
+        if(index == -1)
+        {
+          index = 0;
+        }
+
+        food[i]->set_x(free_x_values[index]);
+        food[i]->set_y(free_y_values[index]);
+
+      }
+    }
+
+    return;
+
+  }
+
+  void multiP_switchFood(bool** face, std::deque<IntTuple*> &food, int p1x, int p1y, int p2x, int p2y)
+  {
+    /* Reassign one of the food blips, make sure that it is not
+    already true on the board. Accounts for 2 snakes.
+    */
+
+    for(int i = 0; i < food.size(); i++)
+    {
+      if((p1x == food[i]->get_x() && p1y == food[i]->get_y()) || (p2x == food[i]->get_x() && p2y == food[i]->get_y()))
+      {
+
+        std::vector<int> free_x_values;
+        std::vector<int> free_y_values;
+
+        for(int i = 0; i < 32; i +=2)
+        {
+          for(int j = 0; j < 128; j +=2)
+          {
+            if(face[i][j] == false)
+            {
+              free_x_values.push_back(i);
+              free_y_values.push_back(j);
+            }
+          }
+        }
+
+        int index = getRandInt() % free_x_values.size() - 1;
+
+        if(index == -1)
+        {
+          index = 0;
+        }
+
+        food[i]->set_x(free_x_values[index]);
+        food[i]->set_y(free_y_values[index]);
+
+      }
+
+    }
+
+    return;
+
+  }
+
+
+
   void RunSnake(int players) {
     uint32_t continuum = 0;
 
@@ -456,19 +478,28 @@ public:
 
         }
 
-
-        if(checkCollision(p1snake, p1x_axis, p1y_axis))
-        {
-          // Player 2 victory
-          return;
-        }
-
-
         if(players == 2)
         {
           if(checkCollision(p2snake, p2x_axis, p2y_axis))
           {
             // Player 1 victory
+            Victory* victory = new Victory(matrix_);
+            victory->VictorRun(1);
+            return;
+          }
+          else if(checkCollision(p1snake, p1x_axis, p1y_axis))
+          {
+            // Player 2 victory
+            Victory* victory = new Victory(matrix_);
+            victory->VictorRun(2);
+            delete victory;
+            return;
+          }
+        }
+        else {
+          //Just return if it's one player and they collide
+          if(checkCollision(p1snake, p1x_axis, p1y_axis))
+          {
             return;
           }
         }
@@ -478,7 +509,7 @@ public:
 
         if(p1foodCollide && p2foodCollide)
         {
-          multiP_switchFood(p1snake, p2snake, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
+          multiP_switchFood(currentMenu, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
         }
         else if(p1foodCollide)
 	{
@@ -486,18 +517,18 @@ public:
 	  if(players == 2)
           {
             p2snake.pop_front();
-	    multiP_switchFood(p1snake, p2snake, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
+	    multiP_switchFood(currentMenu, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
           }
           else
 	  {
-	    singleP_switchFood(p1snake, Food, p1x_axis, p1y_axis);
+	    singleP_switchFood(currentMenu, Food, p1x_axis, p1y_axis);
 	  }
 
 	}
 	else if(p2foodCollide)
 	{
           p1snake.pop_front();
-	  multiP_switchFood(p1snake, p2snake, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
+	  multiP_switchFood(currentMenu, Food, p1x_axis, p1y_axis, p2x_axis, p2y_axis);
 	}
 	else
 	{
