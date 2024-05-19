@@ -371,7 +371,7 @@ public:
                 }
              }
           }
-          usleep(5000);
+          usleep(3000);
 
         }
 

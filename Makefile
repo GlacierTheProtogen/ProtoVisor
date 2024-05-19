@@ -19,7 +19,7 @@ all : $(BINARIES)
 $(RGB_LIBRARY): FORCE
 	$(MAKE) -C $(RGB_LIBDIR)
 
-protovisor : protovisor.o runner.o controller.o menu.o 2player-menu.o snake.o victory.o $(RGB_LIBRARY)
+protovisor : protovisor.o runner.o controller.o menu.o 2player-menu.o snake.o victory.o pong.o $(RGB_LIBRARY)
 	$(CXX) $< -o $@ $(LDFLAGS)
 
 protovisor.o : protovisor.cpp
@@ -44,6 +44,9 @@ snake.o : snake.cpp
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 victory.o : victory.cpp runner.h
+	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
+
+pong.o : pong.cpp
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 clean:

@@ -5,6 +5,8 @@
 #include "countdown.cpp"
 #include "snake.cpp"
 #include "2player-menu.cpp"
+#include "pong.cpp"
+
 
 #include <limits.h>
 #include <math.h>
@@ -148,6 +150,14 @@ public:
               }
 
               delete twoplayer;
+            }
+            else if(button == 2 && sel == 1)
+            {
+              CountDown * countdown = new CountDown(matrix_);
+              countdown->Run();
+              Pong * runner = new Pong(matrix_);
+              runner->Run();
+              delete runner;
             }
 
             else if(button == 4 || (button == 2 && sel == 5))
