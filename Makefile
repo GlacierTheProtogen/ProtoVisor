@@ -43,7 +43,7 @@ countdown.o : countdown.cpp runner.h
 snake.o : snake.cpp
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
-victory.o : victory.cpp runner.h
+victory.o : victory.h runner.h
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 pong.o : pong.cpp

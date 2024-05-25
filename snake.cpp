@@ -1,7 +1,7 @@
 #include "runner.h"
 #include "face.h"
 #include "controller.cpp"
-#include "victory.cpp"
+#include "victory.h"
 
 #include <limits.h>
 #include <math.h>

@@ -1,6 +1,7 @@
 #include "runner.h"
 #include "face.h"
 #include "controller.cpp"
+#include "victory.h"
 
 #include <limits.h>
 #include <math.h>
@@ -12,6 +13,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <vector>
+#include <thread>
 
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
@@ -73,6 +75,79 @@ void movePaddle(std::deque<IntTuple*> &paddle, bool direction)
   return;
 }
 
+void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntTuple* ball_coords, bool* ballBreak)
+{
+
+  double x_direction = -1;
+  double y_direction = 1;
+
+  double x_movement = 1.0;
+  double y_movement = 2.6;
+
+  double next_x = 10.0;
+  double next_y = 40.0;
+
+  int cycle_time = 50000;
+
+  while(*ballBreak)
+  {
+    next_x = next_x + (x_movement * x_direction)/3;
+    next_y = next_y + (y_movement * y_direction)/3;
+
+
+    for(int i = 0; i < p1paddle.size(); i++)
+    {
+      int paddle_x = p1paddle[i]->get_x();
+      int paddle_y = p1paddle[i]->get_y();
+
+
+      // Fix me: Duplicate code, should only be its own function
+      if((next_x >= paddle_x && next_x <= paddle_x + 2) && (next_y >= paddle_y && next_y <= paddle_y +2))
+      {
+        y_direction = -y_direction;
+        cycle_time = cycle_time - 1000;
+        break;
+      }
+
+      paddle_x = p2paddle[i]->get_x();
+      paddle_y = p2paddle[i]->get_y();
+
+      if((next_x >= paddle_x -2 && next_x <= paddle_x) && (next_y >= paddle_y && next_y <= paddle_y + 2))
+      {
+        y_direction = -y_direction;
+        cycle_time = cycle_time - 1000;
+        break;
+      }
+    }
+
+    if(next_x >= 30 || next_x <= 0)
+    {
+      x_direction = -x_direction;
+    }
+
+    //if(next_y <= 0)
+    //{
+    //  std::cout << "PLAYER 2 VICTORY" << std::endl;
+    //  return;
+    //}
+
+    //if(next_y >= 126)
+    //{
+    //  std::cout << "PLAYER 1 VICTORY" << std::endl;
+    //  return;
+    //}
+
+    ball_coords->set_x(std::round(next_x));
+    ball_coords->set_y(std::round(next_y));
+
+    usleep(cycle_time);
+  }
+
+  return;
+}
+
+
+
 class Pong : public Runner {
 public:
   Pong(RGBMatrix *m) : Runner(m), matrix_(m) {
@@ -88,6 +163,16 @@ public:
         {
           canvas()->SetPixel(y, x, r, g, b);
         }
+      }
+    }
+  }
+  void drawBall(IntTuple* ball, int r, int g, int b)
+  {
+    for(int x = ball->get_x(); x < ball->get_x() + 2; x++)
+    {
+      for(int y = ball->get_y(); y < ball->get_y() + 2; y++)
+      {
+        canvas()->SetPixel(y, x, r, g, b);
       }
     }
   }
@@ -108,7 +193,6 @@ public:
     bool p1buttonPressed = false; // Wether or not a button is pressed.
     bool p2buttonPressed = false;
     bool** currentMenu = menu; // Current face
-
 
     IntTuple* Player1Start1 = new IntTuple(12, 16);
     IntTuple* Player1Start2 = new IntTuple(14, 16);
@@ -139,6 +223,10 @@ public:
 
     drawFullInput(currentMenu, 0, 0, 0, 255);
 
+    IntTuple ball_coords(20, 60);
+
+    bool ballBreak = true;
+    std::thread ballThread(ball, std::ref(p1paddle), std::ref(p2paddle), &ball_coords, &ballBreak);
 
     while (!interrupt_received) {
 
@@ -200,6 +288,7 @@ public:
           }
         }
       }
+
       usleep(200);
 
       if(p1move == true)
@@ -216,8 +305,30 @@ public:
 
      canvas()->Clear();
 
+     if(ball_coords.get_y() >= 128)
+     {
+       ballBreak = false;
+       ballThread.join();
+       Victory* victory = new Victory(matrix_);
+       victory->VictorRun(1);
+       delete victory;
+       return;
+     }
+
+     if(ball_coords.get_y() <= 0)
+     {
+       ballBreak = false;
+       ballThread.join();
+       Victory* victory = new Victory(matrix_);
+       victory->VictorRun(2);
+       delete victory;
+       return;
+     }
+
+
      drawBlipArray(p1paddle, 0, 0, 255);
      drawBlipArray(p2paddle, 255, 165, 0);
+     drawBall(&ball_coords, 255, 255, 255);
 
 
     }
