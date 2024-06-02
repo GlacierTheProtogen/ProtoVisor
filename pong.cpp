@@ -1,4 +1,4 @@
-#include "runner.h"
+x#include "runner.h"
 #include "face.h"
 #include "controller.cpp"
 #include "victory.h"
@@ -77,68 +77,111 @@ void movePaddle(std::deque<IntTuple*> &paddle, bool direction)
 
 void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntTuple* ball_coords, bool* ballBreak)
 {
+  double angle = 45;
+  double hypotenuese = 5;
 
-  double x_direction = -1;
+  double pi = M_PI;
+
+  double next_x = 100.0;
+  double next_y = 400.0;
+  int bounce_timer = 0;
+
+
+  int cycle_time = 17000;
+
   double y_direction = 1;
-
-  double x_movement = 1.0;
-  double y_movement = 2.6;
-
-  double next_x = 10.0;
-  double next_y = 40.0;
-
-  int cycle_time = 50000;
 
   while(*ballBreak)
   {
-    next_x = next_x + (x_movement * x_direction)/3;
-    next_y = next_y + (y_movement * y_direction)/3;
 
+    if(bounce_timer > 0)
+    {
+      bounce_timer--;
+    }
+
+    double x_movement = hypotenuese * sin(angle * (pi/180));
+    double y_movement = (hypotenuese * cos(angle * (pi/180)) * y_direction);
+
+    next_x = next_x + x_movement;
+    next_y = next_y + y_movement;
+
+
+    double angle_change = -45;
 
     for(int i = 0; i < p1paddle.size(); i++)
     {
-      int paddle_x = p1paddle[i]->get_x();
-      int paddle_y = p1paddle[i]->get_y();
+      angle_change = angle_change + 15;
 
+      int paddle_x = (p1paddle[i]->get_x())*10;
+      int paddle_y = (p1paddle[i]->get_y())*10;
 
       // Fix me: Duplicate code, should only be its own function
-      if((next_x >= paddle_x && next_x <= paddle_x + 2) && (next_y >= paddle_y && next_y <= paddle_y +2))
+      if((next_x >= paddle_x && next_x <= paddle_x + 20) && (next_y >= paddle_y && next_y <= paddle_y + 20) && bounce_timer == 0)
       {
         y_direction = -y_direction;
+        bounce_timer = 30;
+
+
+        double new_x_movement = x_movement + (hypotenuese * sin(angle * (pi/180)));
+        double new_y_movement = (y_movement + (hypotenuese * cos(angle * (pi/180)) * y_direction));
+
+        bool angle_viable = (angle_change >= -75 && angle_change <= 75);
+
+        if(angle_viable)
+        {
+          angle = angle + angle_change;
+          x_movement = new_x_movement;
+          y_movement = new_y_movement;
+        }
+
         cycle_time = cycle_time - 1000;
         break;
       }
 
-      paddle_x = p2paddle[i]->get_x();
-      paddle_y = p2paddle[i]->get_y();
+      paddle_x = (p2paddle[i]->get_x())*10;
+      paddle_y = (p2paddle[i]->get_y())*10;
 
-      if((next_x >= paddle_x -2 && next_x <= paddle_x) && (next_y >= paddle_y && next_y <= paddle_y + 2))
+      if((next_x >= paddle_x  && next_x <= paddle_x + 20) && (next_y >= paddle_y - 20 && next_y <= paddle_y) && bounce_timer == 0)
       {
         y_direction = -y_direction;
-        cycle_time = cycle_time - 1000;
+        bounce_timer = 30;
+
+
+        double new_x_movement = x_movement + (hypotenuese * sin(angle * (pi/180)));
+        double new_y_movement = (y_movement + (hypotenuese * cos(angle * (pi/180)) * y_direction));
+
+        bool angle_viable = (angle_change >= -75 && angle_change <= 75);
+
+        if(angle_viable);
+        {
+          angle = angle + angle_change;
+          x_movement = new_x_movement;
+          y_movement = new_y_movement;
+        }
+
+        //cycle_time = cycle_time - 1000;
+
+        if(cycle_time > 1000)
+        {
+	  cycle_time = cycle_time - 1000;
+        }
+        else if(cycle_time > 100)
+        {
+          cycle_time = cycle_time - 10;
+        }
+
         break;
       }
     }
 
-    if(next_x >= 30 || next_x <= 0)
+    if(next_x >= 300 || next_x <= 0)
     {
-      x_direction = -x_direction;
+      angle = -angle;
     }
 
-    //if(next_y <= 0)
-    //{
-    //  std::cout << "PLAYER 2 VICTORY" << std::endl;
-    //  return;
-    //}
 
-    //if(next_y >= 126)
-    //{
-    //  std::cout << "PLAYER 1 VICTORY" << std::endl;
-    //  return;
-    //}
-
-    ball_coords->set_x(std::round(next_x));
-    ball_coords->set_y(std::round(next_y));
+    ball_coords->set_x(std::round(next_x/10));
+    ball_coords->set_y(std::round(next_y/10));
 
     usleep(cycle_time);
   }
