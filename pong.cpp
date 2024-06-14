@@ -1,4 +1,4 @@
-x#include "runner.h"
+#include "runner.h"
 #include "face.h"
 #include "controller.cpp"
 #include "victory.h"
@@ -75,7 +75,7 @@ void movePaddle(std::deque<IntTuple*> &paddle, bool direction)
   return;
 }
 
-void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntTuple* ball_coords, bool* ballBreak)
+void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntTuple* ball_coords, IntTuple* visual_ball, bool* ballBreak)
 {
   double angle = 45;
   double hypotenuese = 5;
@@ -105,7 +105,6 @@ void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntT
     next_x = next_x + x_movement;
     next_y = next_y + y_movement;
 
-
     double angle_change = -45;
 
     for(int i = 0; i < p1paddle.size(); i++)
@@ -125,7 +124,7 @@ void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntT
         double new_x_movement = x_movement + (hypotenuese * sin(angle * (pi/180)));
         double new_y_movement = (y_movement + (hypotenuese * cos(angle * (pi/180)) * y_direction));
 
-        bool angle_viable = (angle_change >= -75 && angle_change <= 75);
+        bool angle_viable = (angle + angle_change >= -75 && angle + angle_change <= 75);
 
         if(angle_viable)
         {
@@ -134,7 +133,15 @@ void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntT
           y_movement = new_y_movement;
         }
 
-        cycle_time = cycle_time - 1000;
+        if(cycle_time > 1000)
+        {
+          cycle_time = cycle_time - 1000;
+        }
+        else if(cycle_time > 100)
+        {
+          cycle_time = cycle_time - 10;
+        }
+
         break;
       }
 
@@ -176,8 +183,19 @@ void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntT
 
     if(next_x >= 300 || next_x <= 0)
     {
+      std::cout << angle << std::endl;
       angle = -angle;
     }
+
+    if(next_y > 630)
+    {
+      visual_ball->set_y(62);
+    }
+    else
+    {
+      visual_ball->set_y(64);
+    }
+    visual_ball->set_x(std::round(next_x/10));
 
 
     ball_coords->set_x(std::round(next_x/10));
@@ -267,9 +285,10 @@ public:
     drawFullInput(currentMenu, 0, 0, 0, 255);
 
     IntTuple ball_coords(20, 60);
+    IntTuple visual_ball(20, 62);
 
     bool ballBreak = true;
-    std::thread ballThread(ball, std::ref(p1paddle), std::ref(p2paddle), &ball_coords, &ballBreak);
+    std::thread ballThread(ball, std::ref(p1paddle), std::ref(p2paddle), &ball_coords, &visual_ball, &ballBreak);
 
     while (!interrupt_received) {
 
@@ -372,7 +391,7 @@ public:
      drawBlipArray(p1paddle, 0, 0, 255);
      drawBlipArray(p2paddle, 255, 165, 0);
      drawBall(&ball_coords, 255, 255, 255);
-
+     drawBall(&visual_ball, 255, 255, 255);
 
     }
    }
