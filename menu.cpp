@@ -6,7 +6,7 @@
 #include "snake.cpp"
 #include "2player-menu.cpp"
 #include "pong.cpp"
-
+#include "simon-says.cpp"
 
 #include <limits.h>
 #include <math.h>
@@ -150,6 +150,12 @@ public:
               }
 
               delete twoplayer;
+            }
+            else if(button == 2 && sel == 4)
+            {
+              SimonSays * simon = new SimonSays(matrix_);
+              simon->Run();
+              delete simon;
             }
             else if(button == 2 && sel == 1)
             {

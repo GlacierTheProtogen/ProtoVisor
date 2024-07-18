@@ -183,7 +183,6 @@ void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntT
 
     if(next_x >= 300 || next_x <= 0)
     {
-      std::cout << angle << std::endl;
       angle = -angle;
     }
 

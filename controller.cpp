@@ -146,7 +146,7 @@ void process_events(struct libevdev *dev, std::chrono::system_clock::time_point*
 	}
 
 	while(1) {
-		//std::cout << "Got input_event";
+	        //std::cout << "Got input_event";
 		//std::cout << " type=" << ev.type;
 		//std::cout << " code=" << ev.code;
 		//std::cout << " value=" << ev.value << std::endl;

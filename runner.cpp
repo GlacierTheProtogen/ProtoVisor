@@ -27,6 +27,9 @@ public:
     bool** angry = FileToFace("angry", false);
     bool** sad = FileToFace("sad", false);
     bool** uwu = FileToFace("uwu", false);
+    bool** boykisser = FileToFace("boykisser", false);
+    bool** positive = FileToFace("positive", true);
+    bool** negative = FileToFace("negative", true);
 
     bool** happyblink = FileToFace("happy-blink", false);
     bool** baseblink = FileToFace("baseface-blink", false);
@@ -34,7 +37,6 @@ public:
     bool** pokerblink = FileToFace("poker-blink", false);
     bool** angryblink = FileToFace("angry-blink", false);
     bool** sadblink = FileToFace("sad-blink", false);
-
 
     int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
     int flowcounter = 0; // Incremented integer that is used for the cosign function.
@@ -152,6 +154,7 @@ public:
 
 	button = current_button_pushed(controller1buttons);
 
+
         // FIXME: The number of below if statements sucks. Maybe a dictionary of pointers?
 
 	if(buttonPressed == true)
@@ -204,6 +207,22 @@ public:
               rave_mode = true;
               currentFace = happy;
             }
+            else if(button == 8)
+            {
+              currentFace = boykisser;
+              rave_mode = false;
+            }
+            else if(button == 14)
+            {
+              currentFace = positive;
+              rave_mode = false;
+            }
+            else if(button == 15)
+            {
+              currentFace = negative;
+              rave_mode = false;
+            }
+
 	 }
 	}
 
