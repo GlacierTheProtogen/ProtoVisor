@@ -16,10 +16,10 @@ public:
   SimonSays(RGBMatrix *m) : Runner(m), matrix_(m) {
     off_screen_canvas_ = m->CreateFrameCanvas();
   }
-  void faceFlash(bool** currentFace, int simon_r, int simon_g, int simon_b)
+  void faceFlash(bool** currentFace, int simon_r, int simon_g, int simon_b, int sleep_time)
   {
     drawFaceInput(currentFace, 0, simon_r, simon_g, simon_b);
-    usleep(900000);
+    usleep(sleep_time);
     canvas()->Clear();
     usleep(100000);
 
@@ -28,6 +28,8 @@ public:
     //FIXME: The following should be objects.
 
     bool** base = FileToFace("baseface", false);
+    bool** dead = FileToFace("dead", false);
+    bool** happy = FileToFace("happy", false);
 
     int curButton = -1; // Current button that is pressed. Start off with an arbitrary number that doesn't map to a button.
     int button; // Button that is pressed.
@@ -86,11 +88,20 @@ public:
 
         colorsOrder.push_back(randint);
 
+        if(colorsOrder.size() > 1)
+        {
+          for(int j = 0; j< 3; j++)
+          {
+            int last_color = colorsOrder[colorsOrder.size()-2];
+            faceFlash(happy, colors[last_color][0], colors[last_color][1], colors[last_color][2], 300000);
+          }
+        }
+
         usleep(900000);
 
         for(int i = 0; i < colorsOrder.size(); i++)
         {
-          faceFlash(currentFace, colors[colorsOrder[i]][0], colors[colorsOrder[i]][1], colors[colorsOrder[i]][2]);
+          faceFlash(currentFace, colors[colorsOrder[i]][0], colors[colorsOrder[i]][1], colors[colorsOrder[i]][2], 900000);
         }
 
 
@@ -105,16 +116,18 @@ public:
             {
               buttonPressed = true;
 
-              std::cout << "The correct answer was " << colorsOrder[i] << std::endl;
-              std::cout << "Your answer: " << button - 1 << std::endl;
-
               if(button - 1 == colorsOrder[i])
               {
-                faceFlash(currentFace, colors[colorsOrder[i]][0], colors[colorsOrder[i]][1], colors[colorsOrder[i]][2]);
+                faceFlash(currentFace, colors[colorsOrder[i]][0], colors[colorsOrder[i]][1], colors[colorsOrder[i]][2], 900000);
                 continue;
               }
               else
               {
+                for(int j = 0; j< 3; j++)
+                {
+                  faceFlash(dead, colors[colorsOrder[i]][0], colors[colorsOrder[i]][1], colors[colorsOrder[i]][2], 300000);
+                }
+
                 //defeat
                 return; 
               }
