@@ -311,12 +311,12 @@ public:
 	{
 	  p1buttonPressed = true;
 
-	  if((p1button == 10 || p1button == 6) && p1direction != 3)
+	  if((p1button == 10 || p1button == 6 || p1button == 17) && p1direction != 3)
           {
             p1direction = false;
             p1move = true;
 	  }
-	  else if((p1button == 9 || p1button == 5) && p1direction != 2)
+	  else if((p1button == 9 || p1button == 5 || p1button == 16) && p1direction != 2)
 	  {
             p1direction = true;
             p1move = true;
@@ -337,12 +337,12 @@ public:
         {
           p2buttonPressed = true;
 
-          if((p2button == 10 || p2button == 6) && p2direction != 3)
+          if((p2button == 10 || p2button == 6 || p2button == 17) && p2direction != 3)
           {
             p2direction = false;
             p2move = true;
           }
-          else if((p2button == 9 || p2button == 5) && p2direction != 2)
+          else if((p2button == 9 || p2button == 5 || p2button == 16) && p2direction != 2)
           {
             p2direction = true;
             p2move = true;

@@ -317,19 +317,19 @@ public:
 	    {
 	      p1buttonPressed = true;
 
-	      if((p1button == 10 || p1button == 6) && p1direction != 3)
+	      if((p1button == 10 || p1button == 6 || p1button == 17) && p1direction != 3)
               {
                 p1direction = 2;
 	      }
-	      else if((p1button == 9 || p1button == 5) && p1direction != 2)
+	      else if((p1button == 9 || p1button == 5 || p1button == 16) && p1direction != 2)
 	      {
                 p1direction = 3;
               }
-              else if((p1button == 12 || p1button == 8) && p1direction != 1)
+              else if((p1button == 12 || p1button == 8 || p1button == 19) && p1direction != 1)
               {
                 p1direction = 4;
               }
-              else if((p1button == 7 || p1button == 11) && p1direction != 4)
+              else if((p1button == 7 || p1button == 11 || p1button == 18) && p1direction != 4)
               {
                 p1direction = 1;
               }
@@ -352,19 +352,19 @@ public:
                 {
                   p2buttonPressed = true;
 
-                  if((p2button == 10 || p2button == 6) && p2direction != 3)
+                  if((p2button == 10 || p2button == 6 || p2button == 17) && p2direction != 3)
                   {
                     p2direction = 2;
                   }
-                  else if((p2button == 9 || p2button == 5) && p2direction != 2)
+                  else if((p2button == 9 || p2button == 5 || p2button == 16) && p2direction != 2)
                   {
                     p2direction = 3;
                   }
-                  else if((p2button == 12 || p2button == 8) && p2direction != 1)
+                  else if((p2button == 12 || p2button == 8 || p2button == 19) && p2direction != 1)
                   {
                     p2direction = 4;
                   }
-                  else if((p2button == 7 || p2button == 11) && p2direction != 4)
+                  else if((p2button == 7 || p2button == 11 || p2button == 18) && p2direction != 4)
                   {
                     p2direction = 1;
                   }
