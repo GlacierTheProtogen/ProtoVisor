@@ -109,7 +109,7 @@ public:
 	    buttonPressed = true;
             drawNewFace = true;
 
-	    if(button == 10 || button == 6)
+	    if(button == 10 || button == 6 || button == 17)
             {
               if(sel == 5)
               {
@@ -120,7 +120,7 @@ public:
                 sel = sel + 1;
               }
 	    }
-	    else if(button == 9 || button == 5)
+	    else if(button == 9 || button == 5 || button == 16)
 	    {
               if(sel == 0)
               {
@@ -131,7 +131,7 @@ public:
                 sel = sel - 1;
               }
             }
-            else if(button == 12 || button == 8 || button == 7 || button == 11)
+            else if(button == 12 || button == 8 || button == 7 || button == 11 || button == 18 || button == 19)
             {
               sel = sel + 3;
             }

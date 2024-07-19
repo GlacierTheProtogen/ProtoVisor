@@ -514,22 +514,26 @@ public:
 
         }
 
-        bool check1victory = checkVictory(p1snake, p2snake);
-
-        if(check1victory)
+        if(players == 2)
         {
-          Victory * victory = new Victory(matrix_);
-          victory->VictorRun(1);
-          return;
-        }
+          bool check1victory = checkVictory(p1snake, p2snake);
 
-        bool check2victory = checkVictory(p2snake, p1snake);
+          if(check1victory)
+          {
+            Victory * victory = new Victory(matrix_);
+            victory->VictorRun(1);
+            return;
+          }
 
-        if(check2victory)
-        {
-          Victory * victory = new Victory(matrix_);
-          victory->VictorRun(2);
-          return;
+          bool check2victory = checkVictory(p2snake, p1snake);
+
+          if(check2victory)
+          {
+            Victory * victory = new Victory(matrix_);
+            victory->VictorRun(2);
+            return;
+          }
+
         }
 
         canvas()->Clear();
