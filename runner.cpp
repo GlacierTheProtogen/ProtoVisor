@@ -291,7 +291,14 @@ public:
           }
           else
           {
-            drawFaceInput(currentFace, (int)(cosign), 0, 0, 255);
+            if(currentFace == positive || currentFace == negative)
+            {
+              drawFullInput(currentFace, (int)(cosign), 0, 0, 255);
+            }
+            else
+            {
+              drawFaceInput(currentFace, (int)(cosign), 0, 0, 255);
+            }
           }
         }
 
