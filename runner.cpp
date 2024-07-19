@@ -30,6 +30,7 @@ public:
     bool** boykisser = FileToFace("boykisser", false);
     bool** positive = FileToFace("positive", true);
     bool** negative = FileToFace("negative", true);
+    bool** dead = FileToFace("dead", true);
 
     bool** happyblink = FileToFace("happy-blink", false);
     bool** baseblink = FileToFace("baseface-blink", false);
@@ -204,8 +205,8 @@ public:
             }
             else if(button == 7)
             {
-              rave_mode = true;
-              currentFace = happy;
+              currentFace = dead;
+              rave_mode = false;
             }
             else if(button == 8)
             {
@@ -221,6 +222,11 @@ public:
             {
               currentFace = negative;
               rave_mode = false;
+            }
+            else if(button == 22)
+            {
+              currentFace = happy;
+              rave_mode = true;
             }
 
 	 }
