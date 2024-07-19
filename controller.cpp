@@ -39,13 +39,22 @@ const int DPAD_UP_1 = 46;
 const int DPAD_DOWN_1 = 47;
 const int DPAD_LEFT_1 = 44;
 const int DPAD_RIGHT_1 = 45;
-const int JOYS_UP_1 = 30;
-const int JOYS_DOWN_1 = 31;
-const int JOYS_LEFT_1 = 16;
-const int JOYS_RIGHT_1 = 17;
+const int X_JOYS_UP_1 = 30;
+const int X_JOYS_DOWN_1 = 31;
+const int X_JOYS_LEFT_1 = 16;
+const int X_JOYS_RIGHT_1 = 17;
 const int GUIDE_1 = 2;
 const int START_1 = 5;
 const int BACK_1 = 4;
+const int Y_JOYS_UP_1 = 18;
+const int Y_JOYS_DOWN_1 = 19;
+const int Y_JOYS_LEFT_1 = 32;
+const int Y_JOYS_RIGHT_1 = 33;
+const int L_BUMPER_1 = 273;
+const int R_BUMPER_1 = 57;
+const int L_TRIGGER_1 = 183;
+const int R_TRIGGER_1 = 184;
+
 
 const int X2 = 38;
 const int A2 = 24;
@@ -55,13 +64,23 @@ const int DPAD_UP_2 = 36;
 const int DPAD_DOWN_2 = 37;
 const int DPAD_LEFT_2 = 22;
 const int DPAD_RIGHT_2 = 23;
-const int JOYS_UP_2 = 9;
-const int JOYS_DOWN_2 = 10;
-const int JOYS_LEFT_2 = 49;
-const int JOYS_RIGHT_2 = 50;
+const int X_JOYS_UP_2 = 9;
+const int X_JOYS_DOWN_2 = 10;
+const int X_JOYS_LEFT_2 = 49;
+const int X_JOYS_RIGHT_2 = 50;
 const int GUIDE_2 = 3;
 const int START_2 = 7;
 const int BACK_2 = 6;
+const int Y_JOYS_UP_2 = 189;
+const int Y_JOYS_DOWN_2 = 190;
+const int Y_JOYS_LEFT_2 = 187;
+const int Y_JOYS_RIGHT_2 = 188;
+const int L_BUMPER_2 = 185;
+const int R_BUMPER_2 = 186;
+const int L_TRIGGER_2 = 44;
+const int R_TRIGGER_2 = 272;
+
+
 
 
 /*
@@ -100,13 +119,22 @@ void process_events(struct libevdev *dev, std::chrono::system_clock::time_point*
 	int DPAD_DOWN;
 	int DPAD_LEFT;
 	int DPAD_RIGHT;
-	int JOYS_UP;
-	int JOYS_DOWN;
-	int JOYS_LEFT;
-	int JOYS_RIGHT;
+	int X_JOYS_UP;
+	int X_JOYS_DOWN;
+	int X_JOYS_LEFT;
+	int X_JOYS_RIGHT;
 	int GUIDE;
 	int START;
 	int BACK;
+        int Y_JOYS_UP;
+        int Y_JOYS_DOWN;
+        int Y_JOYS_LEFT;
+        int Y_JOYS_RIGHT;
+        int L_BUMPER;
+        int R_BUMPER;
+        int L_TRIGGER;
+        int R_TRIGGER;
+
 
 	if(device == "event0")
 	{
@@ -118,13 +146,21 @@ void process_events(struct libevdev *dev, std::chrono::system_clock::time_point*
 	  DPAD_DOWN = DPAD_DOWN_1;
 	  DPAD_LEFT = DPAD_LEFT_1;
 	  DPAD_RIGHT = DPAD_RIGHT_1;
-	  JOYS_UP = JOYS_UP_1;
-	  JOYS_DOWN = JOYS_DOWN_1;
-	  JOYS_LEFT = JOYS_LEFT_1;
-	  JOYS_RIGHT = JOYS_RIGHT_1;
+	  X_JOYS_UP = X_JOYS_UP_1;
+	  X_JOYS_DOWN = X_JOYS_DOWN_1;
+	  X_JOYS_LEFT = X_JOYS_LEFT_1;
+	  X_JOYS_RIGHT = X_JOYS_RIGHT_1;
 	  GUIDE = GUIDE_1;
 	  START = START_1;
 	  BACK = BACK_1;
+          Y_JOYS_UP = Y_JOYS_UP_1;
+          Y_JOYS_DOWN = Y_JOYS_DOWN_1;
+          Y_JOYS_LEFT = Y_JOYS_LEFT_1;
+          Y_JOYS_RIGHT = Y_JOYS_RIGHT_1;
+          L_BUMPER = L_BUMPER_1;
+          R_BUMPER = R_BUMPER_1;
+          L_TRIGGER = L_TRIGGER_1;
+          R_TRIGGER = R_TRIGGER_1;
 	}
 	else
 	{
@@ -136,24 +172,33 @@ void process_events(struct libevdev *dev, std::chrono::system_clock::time_point*
 	  DPAD_DOWN = DPAD_DOWN_2;
 	  DPAD_LEFT = DPAD_LEFT_2;
 	  DPAD_RIGHT = DPAD_RIGHT_2;
-	  JOYS_UP = JOYS_UP_2;
-	  JOYS_DOWN = JOYS_DOWN_2;
-	  JOYS_LEFT = JOYS_LEFT_2;
-	  JOYS_RIGHT = JOYS_RIGHT_2;
+	  X_JOYS_UP = X_JOYS_UP_2;
+	  X_JOYS_DOWN = X_JOYS_DOWN_2;
+	  X_JOYS_LEFT = X_JOYS_LEFT_2;
+	  X_JOYS_RIGHT = X_JOYS_RIGHT_2;
 	  GUIDE = GUIDE_2;
 	  START = START_2;
 	  BACK = BACK_2;
+          Y_JOYS_UP = Y_JOYS_UP_2;
+          Y_JOYS_DOWN = Y_JOYS_DOWN_2;
+          Y_JOYS_LEFT = Y_JOYS_LEFT_2;
+          Y_JOYS_RIGHT = Y_JOYS_RIGHT_2;
+          L_BUMPER = L_BUMPER_2;
+          R_BUMPER = R_BUMPER_2;
+          L_TRIGGER = L_TRIGGER_2;
+          R_TRIGGER = R_TRIGGER_2;
 	}
 
 	while(1) {
-	        //std::cout << "Got input_event";
-		//std::cout << " type=" << ev.type;
-		//std::cout << " code=" << ev.code;
-		//std::cout << " value=" << ev.value << std::endl;
-
 
 		if(libevdev_has_event_pending(dev))
 		{
+                  //std::cout << "Got input_event";
+                  //std::cout << " type=" << ev.type;
+                  //std::cout << " code=" << ev.code;
+                  //std::cout << " value=" << ev.value << std::endl;
+
+
                   // Can't be a switch statement because of variable comparison
 		  status = libevdev_next_event(dev, flags, &ev);
 		  if(!is_error(status))
@@ -182,16 +227,16 @@ void process_events(struct libevdev *dev, std::chrono::system_clock::time_point*
 		    else if(ev.code == DPAD_RIGHT){
 		      arr[7] = std::chrono::system_clock::now();
 		    }
-		    else if(ev.code == JOYS_UP){
+		    else if(ev.code == X_JOYS_UP){
 		      arr[8] = std::chrono::system_clock::now();
 		    }
-		    else if(ev.code == JOYS_DOWN){
+		    else if(ev.code == X_JOYS_DOWN){
 		      arr[9] = std::chrono::system_clock::now();
 		    }
-		    else if(ev.code == JOYS_LEFT){
+		    else if(ev.code == X_JOYS_LEFT){
 		      arr[10] = std::chrono::system_clock::now();
 		    }
-		    else if(ev.code == JOYS_RIGHT){
+		    else if(ev.code == X_JOYS_RIGHT){
 		      arr[11] = std::chrono::system_clock::now();
 		    }
 		    else if(ev.code == GUIDE){
@@ -203,6 +248,31 @@ void process_events(struct libevdev *dev, std::chrono::system_clock::time_point*
 		    else if(ev.code == BACK){
 		      arr[14] = std::chrono::system_clock::now();
 		    }
+                    else if(ev.code == Y_JOYS_UP){
+                      arr[15] = std::chrono::system_clock::now();
+                    }
+                    else if(ev.code == Y_JOYS_DOWN){
+                      arr[16] = std::chrono::system_clock::now();
+                    }
+                    else if(ev.code == Y_JOYS_LEFT){
+                      arr[17] = std::chrono::system_clock::now();
+                    }
+                    else if(ev.code == Y_JOYS_RIGHT){
+                      arr[18] = std::chrono::system_clock::now();
+                    }
+                    else if(ev.code == L_BUMPER){
+                      arr[19] = std::chrono::system_clock::now();
+                    }
+                    else if(ev.code == R_BUMPER){
+                      arr[20] = std::chrono::system_clock::now();
+                    }
+                    else if(ev.code == L_TRIGGER){
+                      arr[21] = std::chrono::system_clock::now();
+                    }
+                    else if(ev.code == R_TRIGGER){
+                      arr[22] = std::chrono::system_clock::now();
+                    }
+
 		  }
 		}
 
@@ -238,7 +308,7 @@ void reader(std::chrono::system_clock::time_point* arr)
 
 	  std::chrono::system_clock::time_point second = std::chrono::system_clock::now();
 
-	  for(std::size_t i = 0; i < 15; i++)
+	  for(std::size_t i = 0; i < 23; i++)
 	  {
 	    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(second - arr[i]);
 	    std::cout << (milliseconds.count() < frames);
@@ -256,7 +326,7 @@ int current_button_pushed(std::chrono::system_clock::time_point* arr)
 	std::chrono::system_clock::time_point ref = std::chrono::system_clock::now();
 	int iter = 1;
 
-	for(std::size_t i = 0; i < 15; i++)
+	for(std::size_t i = 0; i < 23; i++)
 	{
 	  auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ref - arr[i]);
 	  if(milliseconds.count() < frames)

@@ -34,8 +34,8 @@ using std::max;
 #define TERM_NORM "\033[0m"
 
 
-std::chrono::system_clock::time_point* controller1buttons = new std::chrono::system_clock::time_point[15];
-std::chrono::system_clock::time_point* controller2buttons = new std::chrono::system_clock::time_point[15];
+std::chrono::system_clock::time_point* controller1buttons = new std::chrono::system_clock::time_point[23];
+std::chrono::system_clock::time_point* controller2buttons = new std::chrono::system_clock::time_point[23];
 
 int g_red = 0;
 int g_blue = 255;
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 
   std::thread controller1(controller, "event0", controller1buttons);
   std::thread controller2(controller, "event1", controller2buttons);
-  //std::thread readert(reader, controller1buttons);
+  //std::thread readert(reader, controller2buttons);
 
   int demo = -1;
   int scroll_ms = 30;
