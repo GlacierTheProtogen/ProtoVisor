@@ -71,7 +71,6 @@ int main(int argc, char *argv[])
   int scroll_ms = 30;
   const char *demo_parameter = NULL;
 
-
   RGBMatrix::Options matrix_options;
   rgb_matrix::RuntimeOptions runtime_opt;
 

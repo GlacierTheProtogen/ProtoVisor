@@ -31,20 +31,9 @@ public:
     bool** dead = FileToFace("dead", false);
     bool** happy = FileToFace("happy", false);
 
-    int curButton = -1; // Current button that is pressed. Start off with an arbitrary number that doesn't map to a button.
     int button; // Button that is pressed.
-    bool isBlinking = false;
     bool buttonPressed = false; // Wether or not a button is pressed.
-    bool drawNewFace; // Decides wether we are drawing a face on the next iteration of the loop
     bool** currentFace = base; // Current face
-    bool** prevFace = base; // Face to keep track of what the previous face was
-    int home_time = 3556000; // Time to keep track of the home button being pushed down before going to menu
-    int eye_open_counter =  10560000; // Time to keep eyes open before blinking
-    int eye_closed_counter = eye_open_counter / 20; // Time eyes are kept closed for blinking
-
-    int simon_r = 0;
-    int simon_g = 0;
-    int simon_b = 255;
 
     int colors[4][3];
 
@@ -73,8 +62,6 @@ public:
     std::vector<int> colorsOrder;
 
     while (!interrupt_received){
-        drawNewFace = false;
-
 	button = current_button_pushed(controller1buttons);
 
         //for(int i = 0; i < 4; i++)
@@ -90,7 +77,7 @@ public:
 
         if(colorsOrder.size() > 1)
         {
-          for(int j = 0; j< 3; j++)
+          for(int j = 0; j < 3; j++)
           {
             int last_color = colorsOrder[colorsOrder.size()-2];
             faceFlash(happy, colors[last_color][0], colors[last_color][1], colors[last_color][2], 300000);
@@ -99,13 +86,13 @@ public:
 
         usleep(900000);
 
-        for(int i = 0; i < colorsOrder.size(); i++)
+        for(long unsigned int i = 0; i < colorsOrder.size(); i++)
         {
           faceFlash(currentFace, colors[colorsOrder[i]][0], colors[colorsOrder[i]][1], colors[colorsOrder[i]][2], 900000);
         }
 
 
-        for(int i = 0; i < colorsOrder.size(); i++)
+        for(long unsigned int i = 0; i < colorsOrder.size(); i++)
         {
           buttonPressed = false;
           while(!buttonPressed)
@@ -134,36 +121,7 @@ public:
             }
           }
 
-//          usleep(900000);
         }
-
-
-	/** if(buttonPressed == true)
-	{
-          if(button == 0)
-	  {
-            currentFace = base;
-	    buttonPressed = false;
-	  }
-	}
-	else
-	{
-	  if(button != 0)
-	  {
-	    buttonPressed = true;
-
-	    if(button == 2)
-	    {
-              currentFace = base;
-	    }
-	 }
-	}
-
-        if(drawNewFace == true)
-        {
-            drawFaceInput(currentFace, 0, simon_r, simon_g, simon_b);
-        }
-        **/
      }
 
 

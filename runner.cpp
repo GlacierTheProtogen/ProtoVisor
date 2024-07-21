@@ -32,7 +32,7 @@ public:
     bool** negative = FileToFace("negative", true);
     bool** dead = FileToFace("dead", true);
 
-    bool** happyblink = FileToFace("happy-blink", false);
+    //bool** happyblink = FileToFace("happy-blink", false);
     bool** baseblink = FileToFace("baseface-blink", false);
     bool** heartblink = FileToFace("heart-blink", false);
     bool** pokerblink = FileToFace("poker-blink", false);
@@ -42,7 +42,6 @@ public:
     int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
     int flowcounter = 0; // Incremented integer that is used for the cosign function.
     int flowcountercompare = -8; // Used to keep track of the last integer that was used in the cosign function.
-    int curButton = -1; // Current button that is pressed. Start off with an arbitrary number that doesn't map to a button.
     int button; // Button that is pressed.
     bool isBlinking = false;
     bool buttonPressed = false; // Wether or not a button is pressed.

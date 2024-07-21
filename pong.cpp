@@ -22,7 +22,7 @@ extern std::chrono::system_clock::time_point* controller2buttons;
 bool checkPaddleHit(std::deque<IntTuple*> &paddle, int x, int y)
 {
 
-  for(int i = 0; i < paddle.size(); i++)
+  for(long unsigned int i = 0; i < paddle.size(); i++)
   {
     if(paddle[i]->get_x() == x && paddle[i]->get_y() == y)
     {
@@ -35,7 +35,7 @@ bool checkPaddleHit(std::deque<IntTuple*> &paddle, int x, int y)
 
 int checkPongVictory(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &snake2)
 {
-  for(int i = 0; i < snake1.size(); i++)
+  for(long unsigned int i = 0; i < snake1.size(); i++)
   {
     if(snake1[i]->get_x() == snake2.back()->get_x() && snake1[i]->get_y() == snake2.back()->get_y())
     {
@@ -107,7 +107,7 @@ void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntT
 
     double angle_change = -45;
 
-    for(int i = 0; i < p1paddle.size(); i++)
+    for(unsigned long int i = 0; i < p1paddle.size(); i++)
     {
       angle_change = angle_change + 15;
 
@@ -159,7 +159,7 @@ void ball(std::deque<IntTuple*> &p1paddle, std::deque<IntTuple*> &p2paddle, IntT
 
         bool angle_viable = (angle_change >= -75 && angle_change <= 75);
 
-        if(angle_viable);
+        if(angle_viable)
         {
           angle = angle + angle_change;
           x_movement = new_x_movement;
@@ -215,7 +215,7 @@ public:
   }
   void drawBlipArray(std::deque<IntTuple*> &array, int r, int g, int b)
   {
-    for(int i = 0; i < array.size(); i++)
+    for(unsigned long int i = 0; i < array.size(); i++)
     {
       for(int x = array[i]->get_x(); x < array[i]->get_x() + 2; x++)
       {
@@ -238,8 +238,6 @@ public:
   }
 
   void Run() override {
-    uint32_t continuum = 0;
-
     bool** menu = FileToFace("blank-base", true);
 
     bool p1direction = false;
@@ -311,12 +309,12 @@ public:
 	{
 	  p1buttonPressed = true;
 
-	  if((p1button == 10 || p1button == 6 || p1button == 17) && p1direction != 3)
+	  if(p1button == 10 || p1button == 6 || p1button == 17)
           {
             p1direction = false;
             p1move = true;
 	  }
-	  else if((p1button == 9 || p1button == 5 || p1button == 16) && p1direction != 2)
+	  else if(p1button == 9 || p1button == 5 || p1button == 16)
 	  {
             p1direction = true;
             p1move = true;
@@ -337,12 +335,12 @@ public:
         {
           p2buttonPressed = true;
 
-          if((p2button == 10 || p2button == 6 || p2button == 17) && p2direction != 3)
+          if(p2button == 10 || p2button == 6 || p2button == 17)
           {
             p2direction = false;
             p2move = true;
           }
-          else if((p2button == 9 || p2button == 5 || p2button == 16) && p2direction != 2)
+          else if(p2button == 9 || p2button == 5 || p2button == 16)
           {
             p2direction = true;
             p2move = true;

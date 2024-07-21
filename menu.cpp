@@ -24,18 +24,13 @@ public:
     off_screen_canvas_ = m->CreateFrameCanvas();
   }
   void Run() override {
-    uint32_t continuum = 0;
-
     bool** menu = FileToFace("menu-base", true);
 
     int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
     int flowcounter = 0; // Incremented integer that is used for the cosign function.
     int flowcountercompare = -8; // Used to keep track of the last integer that was used in the cosign function.
-    int curButton = -1; // Current button that is pressed. Start off with an arbitrary number that doesn't map to a button.
     int button; // Button that is pressed.
-    bool isBlinking = false;
     bool buttonPressed = false; // Wether or not a button is pressed.
-    bool MenuSelect; // Decides wether we are drawing a face on the next iteration of the loop
     bool** currentMenu = menu; // Current face
     bool drawNewFace = true;
     bool** prevMenu = menu;

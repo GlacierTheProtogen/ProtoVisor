@@ -23,21 +23,12 @@ public:
     std::cout << "ERROR. Run function for 2playermenu is GetAnswer()" << std::endl;
   }
   int GetAnswer() {
-    uint32_t continuum = 0;
-
     bool** menu = FileToFace("two-players", true);
 
-    int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
-    int flowcounter = 0; // Incremented integer that is used for the cosign function.
-    int flowcountercompare = -8; // Used to keep track of the last integer that was used in the cosign function.
-    int curButton = -1; // Current button that is pressed. Start off with an arbitrary number that doesn't map to a button.
     int button; // Button that is pressed.
-    bool isBlinking = false;
     bool buttonPressed = false; // Wether or not a button is pressed.
-    bool MenuSelect; // Decides wether we are drawing a face on the next iteration of the loop
     bool** currentMenu = menu; // Current face
     bool drawNewFace = true;
-    bool** prevMenu = menu;
 
     IntTuple* OneLeftCoords = new IntTuple(2, 4);
     IntTuple* TwoLeftCoords = new IntTuple(2, 14);
@@ -134,6 +125,7 @@ public:
         }
      }
 
+     return 0;
  }
  private:
    RGBMatrix *const matrix_;

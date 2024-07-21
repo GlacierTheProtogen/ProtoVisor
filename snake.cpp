@@ -52,7 +52,7 @@ void prepareFood(std::deque<IntTuple*> &food)
       xrand = 6;
     }
 
-    for(int i = 0; i < food.size(); i++)
+    for(long unsigned int i = 0; i < food.size(); i++)
     {
       if(xrand == food[i]->get_x() && yrand == food[i]->get_y())
       {
@@ -77,7 +77,7 @@ void prepareFood(std::deque<IntTuple*> &food)
 bool checkCollision(std::deque<IntTuple*> &p1snake, int x, int y)
 {
 
-  for(int i = 0; i < p1snake.size(); i++)
+  for(long unsigned int i = 0; i < p1snake.size(); i++)
   {
     if(p1snake[i]->get_x() == x && p1snake[i]->get_y() == y)
     {
@@ -96,7 +96,7 @@ bool checkCollision(std::deque<IntTuple*> &p1snake, int x, int y)
 
 bool checkVictory(std::deque<IntTuple*> &snake1, std::deque<IntTuple*> &snake2)
 {
-  for(int i = 0; i < snake1.size(); i++)
+  for(long unsigned int i = 0; i < snake1.size(); i++)
   {
     if(snake1[i]->get_x() == snake2.back()->get_x() && snake1[i]->get_y() == snake2.back()->get_y())
     {
@@ -129,7 +129,7 @@ public:
   }
   void drawBlipArray(std::deque<IntTuple*> &array, int r, int g, int b)
   {
-    for(int i = 0; i < array.size(); i++)
+    for(long unsigned int i = 0; i < array.size(); i++)
     {
       for(int x = array[i]->get_x(); x < array[i]->get_x() + 2; x++)
       {
@@ -146,12 +146,10 @@ public:
     already true on the board.
     */
 
-    for(int i = 0; i < food.size(); i++)
+    for(long unsigned int i = 0; i < food.size(); i++)
     {
       if(x == food[i]->get_x() && y == food[i]->get_y())
       {
-
-
         std::vector<int> free_x_values;
         std::vector<int> free_y_values;
 
@@ -190,7 +188,7 @@ public:
     already true on the board. Accounts for 2 snakes.
     */
 
-    for(int i = 0; i < food.size(); i++)
+    for(long unsigned int i = 0; i < food.size(); i++)
     {
       if((p1x == food[i]->get_x() && p1y == food[i]->get_y()) || (p2x == food[i]->get_x() && p2y == food[i]->get_y()))
       {
@@ -231,13 +229,8 @@ public:
 
 
   void RunSnake(int players) {
-    uint32_t continuum = 0;
-
     bool** menu = FileToFace("blank-base", true);
 
-    int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
-    int flowcounter = 0; // Incremented integer that is used for the cosign function.
-    int flowcountercompare = -8; // Used to keep track of the last integer that was used in the cosign function.
     int p1button; // Button that is pressed.
     int p2button;
     bool p1buttonPressed = false; // Wether or not a button is pressed.
@@ -284,7 +277,7 @@ public:
     std::deque<IntTuple*> Food;
     prepareFood(Food);
 
-    for(int i = 0; i < Food.size(); i++)
+    for(long unsigned int i = 0; i < Food.size(); i++)
     {
       drawBlip(currentMenu, Food[i], true);
     }
@@ -295,7 +288,6 @@ public:
         drawing. If not, then go back to basic face until a new button is
         pressed */
 
-        flowcounter++;
 
         for(int i = 0; i < 60; i++)
         {
@@ -481,7 +473,7 @@ public:
 	  }
 	}
 
-        for(int i = 0; i < Food.size(); i++)
+        for(long unsigned int i = 0; i < Food.size(); i++)
         {
             drawBlip(currentMenu, Food[i], true);
         }
@@ -491,7 +483,7 @@ public:
 
         IntTuple* P1Tail = p1snake.front();
 
-        for(int i = 0; i < p1snake.size(); i++)
+        for(long unsigned int i = 0; i < p1snake.size(); i++)
         {
           drawBlip(currentMenu, p1snake[i], true);
         }
@@ -505,7 +497,7 @@ public:
 
           IntTuple* P2Tail = p2snake.front();
 
-          for(int i = 0; i < p2snake.size(); i++)
+          for(long unsigned int i = 0; i < p2snake.size(); i++)
           {
             drawBlip(currentMenu, p2snake[i], true);
           }
