@@ -7,6 +7,7 @@
 #include "2player-menu.cpp"
 #include "pong.cpp"
 #include "simon-says.cpp"
+#include "dinosaur-game.cpp"
 
 #include <limits.h>
 #include <math.h>
@@ -151,6 +152,12 @@ public:
               SimonSays * simon = new SimonSays(matrix_);
               simon->Run();
               delete simon;
+            }
+            else if(button == 2 && sel == 2)
+            {
+              DinosaurGame * dinogame = new DinosaurGame(matrix_);
+              dinogame->Run();
+              delete dinogame;
             }
             else if(button == 2 && sel == 1)
             {

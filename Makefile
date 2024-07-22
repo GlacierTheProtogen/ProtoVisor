@@ -1,6 +1,6 @@
 CFLAGS=-Wall -g -O3 -Wextra `pkg-config --cflags --libs libevdev`
 CXXFLAGS=$(CFLAGS)
-OBJECTS=protovisor.o runner.o controller.o menu.o snake.o
+OBJECTS=protovisor.o runner.o controller.o menu.o 2player-menu.o countdown.o snake.o victory.o pong.o simon-says.o dinosaur-game.o
 BINARIES=protovisor
 
 RGB_LIB_DISTRIBUTION=/home/dietpi/workspace/rpi-rgb-led-matrix
@@ -19,7 +19,7 @@ all : $(BINARIES)
 $(RGB_LIBRARY): FORCE
 	$(MAKE) -C $(RGB_LIBDIR)
 
-protovisor : protovisor.o runner.o controller.o menu.o 2player-menu.o snake.o victory.o pong.o simon-says.o $(RGB_LIBRARY)
+protovisor : protovisor.o runner.o controller.o menu.o 2player-menu.o countdown.o snake.o victory.o pong.o simon-says.o dinosaur-game.o $(RGB_LIBRARY)
 	$(CXX) $< -o $@ $(LDFLAGS)
 
 protovisor.o : protovisor.cpp
@@ -50,6 +50,9 @@ pong.o : pong.cpp
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 simon-says.o : simon-says.cpp runner.h
+	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
+
+dinosaur-game.o : dinosaur-game.cpp runner.h
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 clean:
