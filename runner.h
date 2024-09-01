@@ -2,6 +2,8 @@
 #define RUNNER_H
 
 #include "led-matrix.h"
+#include <time.h>
+#include <chrono>
 using namespace rgb_matrix;
 
 
@@ -39,6 +41,17 @@ class IntTuple {
     int coords[2];
 };
 
+int getRandInt()
+{
+  /* Return a random integer, based off of millisec instead of
+  second.
+  */
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  srand((time_t)ts.tv_nsec);
+
+  return rand();
+}
 
 class Runner {
 protected:

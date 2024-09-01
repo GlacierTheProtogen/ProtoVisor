@@ -5,30 +5,16 @@
 
 #include <limits.h>
 #include <math.h>
-#include <chrono>
 #include <cassert>
 #include <map>
 #include <deque>
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 #include <vector>
 
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
 
-
-int getRandInt()
-{
-  /* Return a random integer, based off of millisec instead of
-  second.
-  */
-  struct timespec ts;
-  clock_gettime(CLOCK_MONOTONIC, &ts);
-  srand((time_t)ts.tv_nsec);
-
-  return rand();
-}
 
 void prepareFood(std::deque<IntTuple*> &food)
 {
