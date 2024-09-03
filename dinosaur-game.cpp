@@ -52,6 +52,17 @@ public:
       ground.push_back(23);
     }
 
+    // Jumping physics.
+
+    bool isJumping = false;
+    int startingVelocity = 0;
+    int framesButtonHeld = 0;
+    bool jumpButtonPressed = false;
+    bool longJump = false;
+    int prev_y = 23;
+    int frames_in_air = 0;
+
+    // Sprite work.
     int default_dino_x = 12;
     int default_dino_y = 7;
 
@@ -71,6 +82,7 @@ public:
 
     AnimatedSprite* dinoSprite = new AnimatedSprite(dino1, dino2, 5);
     AnimatedSprite* birdSprite = new AnimatedSprite(bird1, bird2, 3);
+
 
 
     while (!interrupt_received){
@@ -110,14 +122,64 @@ public:
 
       canvas()->Clear();
 
-      drawSprite(dinoSprite->get_current_frame(frames), 20, 12, default_dino_x, default_dino_y, 0, 0, 255);
-
       for(int i = 0; i < 128; i++)
       {
         canvas()->SetPixel(i, ground[i], 0, 0, 255);
       }
 
       button = current_button_pushed(controller1buttons);
+
+      if(button == 2)
+      {
+        if(jumpButtonPressed == false)
+        {
+          isJumping = true;
+          startingVelocity = 3;
+          jumpButtonPressed = true;
+        }
+
+        framesButtonHeld++;
+
+      }
+      if(button == 0)
+      {
+        if(jumpButtonPressed == true)
+        {
+          //if(framesButtonHeld > 6)
+          //{
+            //std::cout << "You just did a long jump." << std::endl;
+          //}
+          //else
+          //{
+            //std::cout << "You just did a short jump." << std::endl;
+          //}
+          framesButtonHeld = 0;
+          jumpButtonPressed = false;
+        }
+      }
+
+
+      if(isJumping)
+      {
+        int delta = nextYvalue(frames_in_air, 12, prev_y);
+
+        if(delta == 12)
+        {
+          isJumping = false;
+          frames_in_air = 0;
+        }
+        else
+        {
+          frames_in_air++;
+        }
+
+        prev_y = delta;
+      }
+
+      //std::cout << prev_y << std::endl;
+
+      drawSprite(dinoSprite->get_current_frame(frames), 20, 12, prev_y, default_dino_y, 0, 0, 255);
+
       usleep(game_speed);
 
       frames++;
