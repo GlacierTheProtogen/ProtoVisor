@@ -5,9 +5,9 @@
 
 // Return what the dino's next y value should be based on how many frames he's been in the air, where he is now, and the ground.
 
-int nextYvalue(int frames, int ground, int prev_y)
+int nextYvalue(int frames, int ground, int prev_y, double initial_velocity)
 {
-  double velocity = 3 - (0.3 * frames);
+  double velocity = initial_velocity - (0.1 * frames);
 
   double new_y = prev_y - velocity;
   int rounded_y = round(new_y);

@@ -61,6 +61,9 @@ public:
     bool longJump = false;
     int prev_y = 23;
     int frames_in_air = 0;
+    const double initialVelocity = 1.8;
+    const double maxVelocity = 2.3;
+
 
     // Sprite work.
     int default_dino_x = 12;
@@ -158,10 +161,16 @@ public:
         }
       }
 
+      double velocity = initialVelocity + (0.1 * framesButtonHeld);
+
+      if(velocity > maxVelocity)
+      {
+        velocity = maxVelocity;
+      }
 
       if(isJumping)
       {
-        int delta = nextYvalue(frames_in_air, 12, prev_y);
+        int delta = nextYvalue(frames_in_air, 12, prev_y, velocity);
 
         if(delta == 12)
         {
