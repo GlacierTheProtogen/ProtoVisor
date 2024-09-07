@@ -2,6 +2,8 @@
 #include "controller.cpp"
 #include "face.h"
 #include "dinosaur-game.h"
+#include "ground-obstacle.h"
+#include "animated-sprite.h"
 
 #include <chrono>
 #include <deque>
@@ -68,9 +70,17 @@ public:
     // Sprite work.
     int default_dino_x = 12;
     int default_dino_y = 7;
+    int spriteGround = 12;
 
-    bool** dino1 = FileToSprite("dino1", 20, 12);
-    bool** dino2 = FileToSprite("dino2", 20, 12);
+    int dinoW = 12;
+    int dinoH = 20;
+
+
+    bool** dino1 = FileToSprite("dino1", dinoH, dinoW);
+    bool** dino2 = FileToSprite("dino2", dinoH, dinoW);
+    bool** dino1Duck = FileToSprite("dino1-ducking1", dinoW, dinoH);
+    bool** dino2Duck = FileToSprite("dino2-ducking2", dinoW, dinoH);
+
 
     bool** bird1 = FileToSprite("bird1", 30, 30);
     bool** bird2 = FileToSprite("bird2", 30, 30);
@@ -78,15 +88,15 @@ public:
     bool** doublecactus1 = FileToSprite("double-cactus-1", 20, 20);
     bool** doublecactus2 = FileToSprite("double-cactus-2", 20, 20);
 
-    bool** cactus1 = FileToSprite("cactus1", 12, 20);
-    bool** cactus2 = FileToSprite("cactus2", 12, 20);
+    bool** cactus1 = FileToSprite("cactus1", 20, 12);
+    bool** cactus2 = FileToSprite("cactus2", 20, 12);
 
     bool** multicactus = FileToSprite("multi-cactus", 36, 20);
 
-    AnimatedSprite* dinoSprite = new AnimatedSprite(dino1, dino2, 5);
+    Dinosaur* dinoSprite = new Dinosaur(dino1, dino2, dino1Duck, dino2Duck, 5, default_dino_x, default_dino_y, dinoW, dinoH);
     AnimatedSprite* birdSprite = new AnimatedSprite(bird1, bird2, 3);
 
-
+    std::deque<groundObstacle*> groundObstacleQueue;
 
     while (!interrupt_received){
 
@@ -120,10 +130,17 @@ public:
       }
 
 
+      if((frames % 200) == 0)
+      {
+        //spawn an enemy
+        groundObstacle* gobst = new groundObstacle(cactus1, 140, 20, 12);
+        groundObstacleQueue.push_back(gobst);
+      }
 
       //Actual drawing
 
       canvas()->Clear();
+
 
       for(int i = 0; i < 128; i++)
       {
@@ -148,20 +165,17 @@ public:
       {
         if(jumpButtonPressed == true)
         {
-          //if(framesButtonHeld > 6)
-          //{
-            //std::cout << "You just did a long jump." << std::endl;
-          //}
-          //else
-          //{
-            //std::cout << "You just did a short jump." << std::endl;
-          //}
           framesButtonHeld = 0;
           jumpButtonPressed = false;
         }
       }
 
       double velocity = initialVelocity + (0.1 * framesButtonHeld);
+
+      for(int i = 0; i < groundObstacleQueue.size(); i++)
+      {
+        drawSprite(groundObstacleQueue[i]->getSpriteReference(), 20, 12, spriteGround, groundObstacleQueue[i]->get_y(), 0, 0, 255);
+      }
 
       if(velocity > maxVelocity)
       {
@@ -188,6 +202,16 @@ public:
       //std::cout << prev_y << std::endl;
 
       drawSprite(dinoSprite->get_current_frame(frames), 20, 12, prev_y, default_dino_y, 0, 0, 255);
+
+
+      for(int i = 0; i < groundObstacleQueue.size(); i++)
+      {
+        groundObstacleQueue[i]->set_y(groundObstacleQueue[i]->get_y() - 1);
+        if(groundObstacleQueue[i]->get_y() < -20)
+        {
+          groundObstacleQueue.pop_back();
+        }
+      }
 
       usleep(game_speed);
 

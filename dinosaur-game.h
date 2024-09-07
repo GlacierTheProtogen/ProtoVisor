@@ -22,14 +22,20 @@ int nextYvalue(int frames, int ground, int prev_y, double initial_velocity)
 }
 
 
-//Sprites with 2 frames
-class AnimatedSprite {
+//Dinosaur Object. Assumes that the ducking sprite has the height and width inverted from the regular sprite.
+class Dinosaur {
   public:
-    AnimatedSprite(bool** frame1_input, bool** frame2_input, int MovementFrames)
+    Dinosaur(bool** frame1_input, bool** frame2_input, bool** duck_frame1_input, bool** duck_frame2_input, int MovementFrames, int initial_x_input, int initial_y_input, int width, int height)
     {
       frame1 = frame1_input;
       frame2 = frame2_input;
       frames = MovementFrames;
+      initial_x = initial_x_input;
+      initial_y = initial_y_input;
+      frame_width = width;
+      frame_height = height;
+      duck_frame1 = duck_frame1_input;
+      duck_frame2 = duck_frame2_input;
     }
     bool** get_current_frame(int totalFrames)
     {
@@ -42,10 +48,40 @@ class AnimatedSprite {
         return frame2;
       }
     }
+    int getInitX()
+    {
+       return initial_x;
+    }
+    int getInitY()
+    {
+       return initial_y;
+    }
+    void setInitY(int y)
+    {
+      initial_y = y;
+    }
+    void setInitX(int x)
+    {
+      initial_x = x;
+    }
+    int getW()
+    {
+      return frame_width;
+    }
+    int getH()
+    {
+      return frame_height;
+    }
   private:
     bool** frame1;
     bool** frame2;
+    bool** duck_frame1;
+    bool** duck_frame2;
     int frames;
+    int initial_x;
+    int initial_y;
+    int frame_width;
+    int frame_height;
 };
 
 
