@@ -36,25 +36,59 @@ class Dinosaur {
       frame_height = height;
       duck_frame1 = duck_frame1_input;
       duck_frame2 = duck_frame2_input;
+      isDucking = false;
+      duck_difference = abs(width - height);
+
+    }
+    bool drawSprite(bool** reference, int height, int width, int start_x, int start_y, int frames) {
+      bool** cur_dino = get_current_frame(frames);
+
+      for(int i = 0; i < height; i++)
+      {
+        for(int j = 0; j < width; j++)
+        {
+          if(face[i][j] == true)
+          {
+            if((cur_dino[j + start_y][i + start_x] == true) && (reference[j + self->getInitY()][i + self->getInitX()] == true))
+            {
+              return true;
+            }
+          }
+        }
+      }
+
+      return false;
     }
     bool** get_current_frame(int totalFrames)
     {
       if((totalFrames % (frames * 2)) > frames)
       {
-        return frame1;
+        if(isDucking) {
+          return duck_frame1;
+        } else {
+          return frame1;
+        }
       }
       else
       {
-        return frame2;
+        if(isDucking) {
+          return duck_frame2;
+        } else {
+          return frame2;
+        }
       }
     }
     int getInitX()
     {
-       return initial_x;
+      return initial_x;
     }
     int getInitY()
     {
-       return initial_y;
+      if(isDucking)
+      {
+        return initial_y + duck_difference;
+      }
+      return initial_y;
     }
     void setInitY(int y)
     {
@@ -66,22 +100,45 @@ class Dinosaur {
     }
     int getW()
     {
-      return frame_width;
+      if(isDucking) {
+        return frame_height;
+      } else {
+        return frame_width;
+      }
     }
     int getH()
     {
-      return frame_height;
+      if(isDucking) {
+        return frame_width;
+      } else {
+        return frame_height;
+      }
     }
+    void setDucking(bool ducking)
+    {
+      isDucking = ducking;
+    }
+    bool getDucking()
+    {
+      return isDucking;
+    }
+    int getDuckDifference()
+    {
+      return duck_difference;
+    }
+
   private:
     bool** frame1;
     bool** frame2;
     bool** duck_frame1;
     bool** duck_frame2;
+    int duck_difference;
     int frames;
     int initial_x;
     int initial_y;
     int frame_width;
     int frame_height;
+    bool isDucking;
 };
 
 

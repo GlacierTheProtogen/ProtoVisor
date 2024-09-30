@@ -41,6 +41,7 @@ public:
 
     int frames = 0;
 
+
     // Continuously draw the ground. have divets every once in a while.
     int lumps [5] = { 0, 1, 1, 0, 0 };
     int ground_lump_iter = 4;
@@ -65,36 +66,52 @@ public:
     int frames_in_air = 0;
     const double initialVelocity = 1.8;
     const double maxVelocity = 2.3;
-
+    bool duckButton = false;
 
     // Sprite work.
-    int default_dino_x = 12;
+    int default_dino_x = 11;
     int default_dino_y = 7;
-    int spriteGround = 12;
+    int spriteGround = 11;
+
+    int birdW = 30;
+    int birdH = 30;
 
     int dinoW = 12;
     int dinoH = 20;
 
+    int doubleCactusW = 20;
+    int doubleCactusH = 20;
+
+    int cactusW = 20;
+    int cactusH = 12;
+
+    int multiCactusW = 36;
+    int multiCactusH = 20;
+
+    int dinoFrames = 5; // How many frames pass before switching to the other leg with running animation.
+    int birdFrames = 3;
 
     bool** dino1 = FileToSprite("dino1", dinoH, dinoW);
     bool** dino2 = FileToSprite("dino2", dinoH, dinoW);
-    bool** dino1Duck = FileToSprite("dino1-ducking1", dinoW, dinoH);
-    bool** dino2Duck = FileToSprite("dino2-ducking2", dinoW, dinoH);
+
+    bool** dino1Duck = FileToSprite("dino-ducking1", dinoW, dinoH);
+    bool** dino2Duck = FileToSprite("dino-ducking2", dinoW, dinoH);
 
 
-    bool** bird1 = FileToSprite("bird1", 30, 30);
-    bool** bird2 = FileToSprite("bird2", 30, 30);
+    bool** bird1 = FileToSprite("bird1", birdW, birdH);
+    bool** bird2 = FileToSprite("bird2", birdW, birdH);
 
-    bool** doublecactus1 = FileToSprite("double-cactus-1", 20, 20);
-    bool** doublecactus2 = FileToSprite("double-cactus-2", 20, 20);
+    bool** doublecactus1 = FileToSprite("double-cactus-1", doubleCactusW, doubleCactusH);
+    bool** doublecactus2 = FileToSprite("double-cactus-2", doubleCactusW, doubleCactusH);
 
-    bool** cactus1 = FileToSprite("cactus1", 20, 12);
-    bool** cactus2 = FileToSprite("cactus2", 20, 12);
+    bool** cactus1 = FileToSprite("cactus1", cactusW, cactusH);
+    bool** cactus2 = FileToSprite("cactus2", cactusW, cactusH);
 
-    bool** multicactus = FileToSprite("multi-cactus", 36, 20);
+    bool** multicactus = FileToSprite("multi-cactus", multiCactusW, multiCactusH);
 
-    Dinosaur* dinoSprite = new Dinosaur(dino1, dino2, dino1Duck, dino2Duck, 5, default_dino_x, default_dino_y, dinoW, dinoH);
-    AnimatedSprite* birdSprite = new AnimatedSprite(bird1, bird2, 3);
+
+    Dinosaur* dinoSprite = new Dinosaur(dino1, dino2, dino1Duck, dino2Duck, dinoFrames, default_dino_x, default_dino_y, dinoW, dinoH);
+    AnimatedSprite* birdSprite = new AnimatedSprite(bird1, bird2, birdFrames);
 
     std::deque<groundObstacle*> groundObstacleQueue;
 
@@ -147,27 +164,38 @@ public:
         canvas()->SetPixel(i, ground[i], 0, 0, 255);
       }
 
-      button = current_button_pushed(controller1buttons);
+      //button = current_button_pushed(controller1buttons);
+      //std::cout << "Button pushed:" << std::endl;
+      //std::cout << button << std::endl;
 
-      if(button == 2)
+      if(jump_button_pushed(controller1buttons))
       {
         if(jumpButtonPressed == false)
         {
           isJumping = true;
           startingVelocity = 3;
           jumpButtonPressed = true;
+
         }
 
         framesButtonHeld++;
 
       }
-      if(button == 0)
+      else
       {
         if(jumpButtonPressed == true)
         {
           framesButtonHeld = 0;
           jumpButtonPressed = false;
         }
+      }
+      if(duck_button_pushed(controller1buttons))
+      {
+        dinoSprite->setDucking(true);
+      }
+      else
+      {
+        dinoSprite->setDucking(false);
       }
 
       double velocity = initialVelocity + (0.1 * framesButtonHeld);
@@ -182,11 +210,12 @@ public:
         velocity = maxVelocity;
       }
 
+
       if(isJumping)
       {
-        int delta = nextYvalue(frames_in_air, 12, prev_y, velocity);
+        int delta = nextYvalue(frames_in_air, 11, prev_y, velocity);
 
-        if(delta == 12)
+        if(delta == 11)
         {
           isJumping = false;
           frames_in_air = 0;
@@ -199,9 +228,8 @@ public:
         prev_y = delta;
       }
 
-      //std::cout << prev_y << std::endl;
-
-      drawSprite(dinoSprite->get_current_frame(frames), 20, 12, prev_y, default_dino_y, 0, 0, 255);
+      dinoSprite->setInitY(prev_y);
+      drawSprite(dinoSprite->get_current_frame(frames), dinoSprite->getH(), dinoSprite->getW(), dinoSprite->getInitY(), dinoSprite->getInitX(), 0, 0, 255);
 
 
       for(int i = 0; i < groundObstacleQueue.size(); i++)

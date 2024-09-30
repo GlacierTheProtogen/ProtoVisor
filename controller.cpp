@@ -357,5 +357,46 @@ bool is_button_pushed(std::chrono::system_clock::time_point* arr, int i)
 
 }
 
+// For the dinosaur game.
+// FIXME: Figure out why this needs to be its own thing, and why is_button_pushed(controller1buttons, 6) is very laggy. 
+bool duck_button_pushed(std::chrono::system_clock::time_point* arr)
+{
+        //return the array value of a button pushed, otherwise return 0 if nothing is pushed.
+        std::chrono::system_clock::time_point ref = std::chrono::system_clock::now();
+        int iter = 1;
+
+        for(std::size_t i = 0; i < 23; i++)
+        {
+          auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ref - arr[i]);
+          if(milliseconds.count() < frames && iter == 6)
+          {
+            return true;
+          }
+          iter++;
+        }
+
+        return 0;
+}
+
+// For the dinosaur game.
+// FIXME: (Repeat code) Figure out why this needs to be its own thing, and why is_button_pushed(controller1buttons, 2) is very laggy. 
+bool jump_button_pushed(std::chrono::system_clock::time_point* arr)
+{
+        //return the array value of a button pushed, otherwise return 0 if nothing is pushed.
+        std::chrono::system_clock::time_point ref = std::chrono::system_clock::now();
+        int iter = 1;
+
+        for(std::size_t i = 0; i < 23; i++)
+        {
+          auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(ref - arr[i]);
+          if(milliseconds.count() < frames && iter == 2)
+          {
+            return true;
+          }
+          iter++;
+        }
+
+        return 0;
+}
 
 #endif
