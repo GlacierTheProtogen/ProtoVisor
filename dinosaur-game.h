@@ -2,6 +2,7 @@
 #define DINOSAUR_GAME_H
 
 #include <cmath>
+#include <unistd.h>
 
 // Return what the dino's next y value should be based on how many frames he's been in the air, where he is now, and the ground.
 
@@ -40,21 +41,41 @@ class Dinosaur {
       duck_difference = abs(width - height);
 
     }
-    bool drawSprite(bool** reference, int height, int width, int start_x, int start_y, int frames) {
-      bool** cur_dino = get_current_frame(frames);
+    bool detectCollission(int ref_height, int ref_width, int start_ref_x, int start_ref_y, int frames)
+    {
+      // Compare the two radii of the given sprite and the dino. Not perfect, but not n ^ 4 operations.
 
-      for(int i = 0; i < height; i++)
+      int local_width;
+      int local_height;
+
+      int collissionDistance = 7;
+
+      if(isDucking)
       {
-        for(int j = 0; j < width; j++)
-        {
-          if(face[i][j] == true)
-          {
-            if((cur_dino[j + start_y][i + start_x] == true) && (reference[j + self->getInitY()][i + self->getInitX()] == true))
-            {
-              return true;
-            }
-          }
-        }
+        local_width = frame_width;
+        local_height = frame_height;
+      }
+      else
+      {
+        local_height = frame_width;
+        local_width = frame_height;
+      }
+
+      int dino_rad_x = getInitX() + (local_width/2);
+      int dino_rad_y = getInitY() + (local_height/2);
+
+      int ref_rad_x = start_ref_x + (ref_width/2);
+      int ref_rad_y = start_ref_y + (ref_height/2);
+
+      int x_difference = ref_rad_y - dino_rad_x;
+      int y_difference = ref_rad_x - dino_rad_y;
+
+      double distance = sqrt((x_difference * x_difference) + (y_difference * y_difference));
+
+
+      if(distance < collissionDistance)
+      {
+        return true;
       }
 
       return false;

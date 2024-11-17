@@ -67,11 +67,14 @@ public:
     const double initialVelocity = 1.8;
     const double maxVelocity = 2.3;
     bool duckButton = false;
+    bool collission = false;
 
     // Sprite work.
     int default_dino_x = 11;
     int default_dino_y = 7;
     int spriteGround = 11;
+
+    bool crash = false;
 
     int birdW = 30;
     int birdH = 30;
@@ -150,7 +153,7 @@ public:
       if((frames % 200) == 0)
       {
         //spawn an enemy
-        groundObstacle* gobst = new groundObstacle(cactus1, 140, 20, 12);
+        groundObstacle* gobst = new groundObstacle(cactus1, spriteGround, 140, 20, 12);
         groundObstacleQueue.push_back(gobst);
       }
 
@@ -203,6 +206,10 @@ public:
       for(int i = 0; i < groundObstacleQueue.size(); i++)
       {
         drawSprite(groundObstacleQueue[i]->getSpriteReference(), 20, 12, spriteGround, groundObstacleQueue[i]->get_y(), 0, 0, 255);
+        if(dinoSprite->detectCollission(20, 12, groundObstacleQueue[i]->get_x(), groundObstacleQueue[i]->get_y(), frames))
+        {
+          crash = true;
+        }
       }
 
       if(velocity > maxVelocity)
@@ -244,6 +251,11 @@ public:
       usleep(game_speed);
 
       frames++;
+
+      if(crash)
+      {
+        usleep(7000000000);
+      }
 
     }
     return;
