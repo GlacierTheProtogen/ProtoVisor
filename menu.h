@@ -22,5 +22,6 @@ void changeOption(bool** face, IntTuple* prevcoords, IntTuple* newcoords)
 
 };
 
+
 #endif
 

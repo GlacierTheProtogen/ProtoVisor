@@ -13,6 +13,10 @@
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
 
+extern int g_red;
+extern int g_blue;
+extern int g_green;
+
 
 class TwoPlayerMenuFace : public Runner {
 public:
@@ -36,7 +40,7 @@ public:
     IntTuple* TwoRightCoords = new IntTuple(66, 14);
 
     changeOption(currentMenu, OneRightCoords, OneLeftCoords);
-    drawFullInput(currentMenu, 0, 0, 0, 255);
+    drawFullInput(currentMenu, 0,  g_red, g_green, g_blue);
 
     int curselection = 1;
 
@@ -121,7 +125,7 @@ public:
 
         if(drawNewFace == true)
         {
-          drawFullInput(currentMenu, (int)(0), 0, 0, 255);
+          drawFullInput(currentMenu, (int)(0),  g_red, g_green, g_blue);
         }
      }
 
@@ -131,4 +135,3 @@ public:
    RGBMatrix *const matrix_;
    FrameCanvas *off_screen_canvas_;
 };
-

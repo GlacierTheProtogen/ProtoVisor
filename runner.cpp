@@ -12,6 +12,10 @@
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
 
+extern int g_red;
+extern int g_blue;
+extern int g_green;
+
 class ProtoFace : public Runner {
 public:
   ProtoFace(RGBMatrix *m) : Runner(m), matrix_(m) {
@@ -281,7 +285,6 @@ public:
          }
         }
 
-
         if(drawNewFace == true)
         {
           if(rave_mode)
@@ -292,11 +295,11 @@ public:
           {
             if(currentFace == positive || currentFace == negative)
             {
-              drawFullInput(currentFace, (int)(cosign), 0, 0, 255);
+              drawFullInput(currentFace, (int)(cosign), g_red, g_green, g_blue);
             }
             else
             {
-              drawFaceInput(currentFace, (int)(cosign), 0, 0, 255);
+              drawFaceInput(currentFace, (int)(cosign), g_red, g_green, g_blue);
             }
           }
         }
@@ -309,4 +312,3 @@ public:
    RGBMatrix *const matrix_;
    FrameCanvas *off_screen_canvas_;
 };
-

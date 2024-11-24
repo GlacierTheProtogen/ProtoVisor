@@ -1,7 +1,10 @@
 # ProtoVisor
-Code for controlling LED protogen visor. 
+This is the code for controlling my Protogen Glacier! Features include Xbox 360 controlled emotes, and games that include Snake, Dinosaur Game, Pong, and Simon Says. 
 
 # Details
+
+# My setup
+The main controller 
 
 # How to compile
 This repository requires the rpi-led-matrix library on your system. To install:

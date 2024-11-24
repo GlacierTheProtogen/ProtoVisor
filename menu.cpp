@@ -18,6 +18,10 @@
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
 
+extern int g_red;
+extern int g_blue;
+extern int g_green;
+
 
 class MenuFace : public Runner {
 public:
@@ -55,7 +59,7 @@ public:
     drawFullInput(currentMenu, 0, 0, 0, 255);
 
     // Treat the menu items as an array. Manipulate this number based on what
-    // Input the user presses on the controller. Finally, map out this 
+    // Input the user presses on the controller. Finally, map out this
     // Selection on the menu.
     int sel = 0;
     int prevsel = 0;
@@ -173,8 +177,6 @@ public:
               return;
             }
 
-
-
             //sel = abs(sel % 6);
 
             sel = abs(sel) % 6;
@@ -186,7 +188,7 @@ public:
 
         if(drawNewFace == true)
         {
-          drawFullInput(currentMenu, (int)(cosign), 0, 0, 255);
+          drawFullInput(currentMenu, (int)(cosign), g_red, g_green, g_blue);
         }
      }
 
@@ -195,4 +197,3 @@ public:
    RGBMatrix *const matrix_;
    FrameCanvas *off_screen_canvas_;
 };
-

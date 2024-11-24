@@ -26,7 +26,6 @@ using namespace rgb_matrix;
 #include "runner.cpp"
 #include "runner.h"
 
-
 using std::min;
 using std::max;
 
@@ -39,8 +38,8 @@ std::chrono::system_clock::time_point* controller2buttons = new std::chrono::sys
 
 
 int g_red = 0;
-int g_blue = 255;
 int g_green = 0;
+int g_blue = 255;
 
 static int usage(const char *progname) {
   fprintf(stderr, "usage: %s <options> -D <demo-nr> [optional parameter]\n",
@@ -125,4 +124,3 @@ int main(int argc, char *argv[])
 	printf("Recieved CTRL-C. Exiting.\n");
 	return 0;
 }
-

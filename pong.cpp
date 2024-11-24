@@ -18,6 +18,9 @@
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
 
+extern int g_red;
+extern int g_blue;
+extern int g_green;
 
 bool checkPaddleHit(std::deque<IntTuple*> &paddle, int x, int y)
 {
@@ -398,4 +401,3 @@ public:
    FrameCanvas *off_screen_canvas_;
    int players;
 };
-
