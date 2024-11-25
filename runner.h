@@ -112,9 +112,29 @@ public:
       }
     }
   }
+  // Only for color menu
+  void drawColorOption(int r, int b, int g, int floater, int x, int y, bool selected)
+  {
+    for(int i = x; i < x + 12; i++)
+    {
+      for(int j = y; j < y + 12; j++)
+      {
+        canvas()->SetPixel(i, j-floater, r, b, g);
+      }
+    }
+    if(selected == false)
+    {
+      for(int i = x + 1; i < x + 11; i++)
+      {
+        for(int j = y + 1; j < y + 11; j++)
+        {
+          canvas()->SetPixel(i, j-floater, 0, 0, 0);
+        }
+      }
+    }
+  }
   virtual ~Runner() {}
   virtual void Run() = 0;
-
 private:
   Canvas *const canvas_;
 

@@ -8,6 +8,7 @@
 #include "pong.cpp"
 #include "simon-says.cpp"
 #include "dinosaur-game.cpp"
+#include "color-menu.cpp"
 
 #include <limits.h>
 #include <math.h>
@@ -150,6 +151,12 @@ public:
               }
 
               delete twoplayer;
+            }
+            else if(button == 2 && sel == 0)
+            {
+              ColorMenu * colorM = new ColorMenu(matrix_);
+              colorM->Run();
+              delete colorM;
             }
             else if(button == 2 && sel == 4)
             {
