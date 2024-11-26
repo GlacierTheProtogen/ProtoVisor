@@ -37,6 +37,7 @@ public:
     bool drawNewFace = true;
     bool** prevMenu = menu;
     int currentOption = 0;
+    bool selectPushedOnce = 0; // Bug where the select button is already pushed
 
     std::map<int, colorOption*> MenuItems;
 
@@ -106,17 +107,6 @@ public:
 
 	    if(button == 11 || button == 18 || button == 19)
             {
-              if(currentOption == 5)
-              {
-                currentOption = 0;
-              }
-              else
-              {
-                currentOption = currentOption + 1;
-              }
-	    }
-	    else if(button == 12 || button == 8 || button == 7)
-	    {
               if(currentOption == 0)
               {
                 currentOption = 7;
@@ -124,6 +114,17 @@ public:
               else
               {
                 currentOption = currentOption - 1;
+              }
+	    }
+	    else if(button == 12 || button == 8 || button == 7)
+	    {
+              if(currentOption == 7)
+              {
+                currentOption = 0;
+              }
+              else
+              {
+                currentOption = currentOption + 1;
               }
             }
             else if(button == 10 || button == 6 || button == 17 || button == 9 || button == 5 || button == 16)
@@ -133,23 +134,37 @@ public:
 
             currentOption = abs(currentOption) % 8;
 
-            if(button == 2)
+            if(button == 2 && selectPushedOnce == true)
             {
               g_red = MenuItems[currentOption]->getRed();
               g_green = MenuItems[currentOption]->getGreen();
               g_blue = MenuItems[currentOption]->getBlue();
               return;
             }
+            else if(button == 2 && selectPushedOnce == false)
+            {
+              selectPushedOnce = true;
+            }
 
 	 }
 
-         for(int i = 0; i < MenuItems.size(); i++)
+         if(button != 0)
          {
-           bool selected = currentOption == i;
-           drawColorOption(MenuItems[i]->getRed(), MenuItems[i]->getGreen(), MenuItems[i]->getBlue(), (int)(cosign), MenuItems[i]->getX(), MenuItems[i]->getY(), selected);
+           std::cout << "The button:" << std::endl;
+           std::cout << button << std::endl;
          }
 
+         if(drawNewFace)
+         {
+           canvas()->Clear();
 
+           for(int i = 0; i < MenuItems.size(); i++)
+           {
+             bool selected = currentOption == i;
+             drawColorOption(MenuItems[i]->getRed(), MenuItems[i]->getGreen(), MenuItems[i]->getBlue(), (int)(cosign), MenuItems[i]->getX(), MenuItems[i]->getY(), selected);
+           }
+
+         }
 	}
      }
 

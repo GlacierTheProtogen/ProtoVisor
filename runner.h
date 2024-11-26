@@ -115,20 +115,33 @@ public:
   // Only for color menu
   void drawColorOption(int r, int b, int g, int floater, int x, int y, bool selected)
   {
-    for(int i = x; i < x + 12; i++)
+
+    int squareWidth = 12;
+
+    for(int i = 0; i < squareWidth + 1; i++)
     {
-      for(int j = y; j < y + 12; j++)
+      canvas()->SetPixel(x, y - floater + i, r, b, g);
+      canvas()->SetPixel(x + squareWidth, y - floater + i,  r, b, g);
+      canvas()->SetPixel(x + i, y - floater, r, b, g);
+      canvas()->SetPixel(x + i, y + squareWidth - floater, r, b, g);
+    }
+    if(selected == true)
+    {
+      for(int i = x + 1; i < x + squareWidth; i++)
       {
-        canvas()->SetPixel(i, j-floater, r, b, g);
+        for(int j = y + 1; j < y + squareWidth; j++)
+        {
+          canvas()->SetPixel(i, j - floater, r, b, g);
+        }
       }
     }
-    if(selected == false)
+    else
     {
-      for(int i = x + 1; i < x + 11; i++)
+      for(int i = x + 1; i < x + squareWidth; i++)
       {
-        for(int j = y + 1; j < y + 11; j++)
+        for(int j = y + 1; j < y + squareWidth; j++)
         {
-          canvas()->SetPixel(i, j-floater, 0, 0, 0);
+          canvas()->SetPixel(i, j - floater, 0, 0, 0);
         }
       }
     }
