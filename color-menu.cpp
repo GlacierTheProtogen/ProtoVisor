@@ -148,12 +148,6 @@ public:
 
 	 }
 
-         if(button != 0)
-         {
-           std::cout << "The button:" << std::endl;
-           std::cout << button << std::endl;
-         }
-
          if(drawNewFace)
          {
            canvas()->Clear();

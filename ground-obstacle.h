@@ -13,10 +13,6 @@ class groundObstacle {
       sprite_size_x = sprite_size_x;
       sprite_size_y = sprite_size_y;
     }
-    bool detectCollision(bool** comp_sprite, Dinosaur* dinosaur)
-    {
-      return false;
-    }
     bool** getSpriteReference()
     {
       return sprite;

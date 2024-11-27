@@ -86,9 +86,8 @@ class Dinosaur {
       {
         if(isDucking) {
           return duck_frame1;
-        } else {
-          return frame1;
         }
+        return frame1;
       }
       else
       {

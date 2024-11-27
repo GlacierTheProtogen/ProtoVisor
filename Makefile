@@ -55,7 +55,7 @@ pong.o : pong.cpp
 simon-says.o : simon-says.cpp runner.h
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
-dinosaur-game.o : dinosaur-game.cpp controller.cpp dinosaur-game.h ground-obstacle.h animated-sprite.h runner.h
+dinosaur-game.o : dinosaur-game.cpp controller.cpp dinosaur-game.h ground-obstacle.h bird-obstacle.h animated-sprite.h runner.h
 	$(CXX) -I $(RGB_INCDIR) $(CXXFLAGS) -c -o $@ $<
 
 clean:

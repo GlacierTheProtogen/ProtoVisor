@@ -4,12 +4,18 @@
 #include "dinosaur-game.h"
 #include "ground-obstacle.h"
 #include "animated-sprite.h"
+#include "bird-obstacle.h"
+
 
 #include <chrono>
 #include <deque>
 
 extern std::chrono::system_clock::time_point* controller1buttons;
 extern std::chrono::system_clock::time_point* controller2buttons;
+
+extern int g_red;
+extern int g_blue;
+extern int g_green;
 
 
 class DinosaurGame : public Runner {
@@ -76,8 +82,8 @@ public:
 
     bool crash = false;
 
-    int birdW = 30;
-    int birdH = 30;
+    int birdW = 15;
+    int birdH = 15;
 
     int dinoW = 12;
     int dinoH = 20;
@@ -117,12 +123,14 @@ public:
     AnimatedSprite* birdSprite = new AnimatedSprite(bird1, bird2, birdFrames);
 
     std::deque<groundObstacle*> groundObstacleQueue;
+    std::deque<birdObstacle*> birdObstacleQueue;
+
 
     while (!interrupt_received){
 
       for(int i = 0; i < 128; i++)
       {
-        canvas()->SetPixel(i, ground[i], 0, 0, 255);
+        canvas()->SetPixel(i, ground[i], g_red, g_green, g_blue);
       }
 
       int lumpchance = (getRandInt() % 64);
@@ -157,14 +165,20 @@ public:
         groundObstacleQueue.push_back(gobst);
       }
 
-      //Actual drawing
+      if((frames % 200) == 0)
+      {
+        //spawn a bird
+        birdObstacle* bobst = new birdObstacle(bird1, bird2, 10, 140, 15, 15, 15);
+        birdObstacleQueue.push_back(bobst);
+      }
 
+      //Actual drawing
       canvas()->Clear();
 
 
       for(int i = 0; i < 128; i++)
       {
-        canvas()->SetPixel(i, ground[i], 0, 0, 255);
+        canvas()->SetPixel(i, ground[i], g_red, g_green, g_blue);
       }
 
       //button = current_button_pushed(controller1buttons);
@@ -205,8 +219,17 @@ public:
 
       for(int i = 0; i < groundObstacleQueue.size(); i++)
       {
-        drawSprite(groundObstacleQueue[i]->getSpriteReference(), 20, 12, spriteGround, groundObstacleQueue[i]->get_y(), 0, 0, 255);
+        drawSprite(groundObstacleQueue[i]->getSpriteReference(), 20, 12, spriteGround, groundObstacleQueue[i]->get_y(), g_red, g_green, g_blue);
         if(dinoSprite->detectCollission(20, 12, groundObstacleQueue[i]->get_x(), groundObstacleQueue[i]->get_y(), frames))
+        {
+          crash = true;
+        }
+      }
+
+      for(int i = 0; i < birdObstacleQueue.size(); i++)
+      {
+        drawSprite(birdObstacleQueue[i]->getSpriteReference(frames), 15, 15, birdObstacleQueue[i]->get_x(), birdObstacleQueue[i]->get_y(), g_red, g_green, g_blue);
+        if(dinoSprite->detectCollission(15, 15, birdObstacleQueue[i]->get_x(), birdObstacleQueue[i]->get_y(), frames))
         {
           crash = true;
         }
@@ -236,7 +259,7 @@ public:
       }
 
       dinoSprite->setInitY(prev_y);
-      drawSprite(dinoSprite->get_current_frame(frames), dinoSprite->getH(), dinoSprite->getW(), dinoSprite->getInitY(), dinoSprite->getInitX(), 0, 0, 255);
+      drawSprite(dinoSprite->get_current_frame(frames), dinoSprite->getH(), dinoSprite->getW(), dinoSprite->getInitY(), dinoSprite->getInitX(), g_red, g_green, g_blue);
 
 
       for(int i = 0; i < groundObstacleQueue.size(); i++)
@@ -248,13 +271,23 @@ public:
         }
       }
 
+      for(int i = 0; i < birdObstacleQueue.size(); i++)
+      {
+        birdObstacleQueue[i]->set_y(birdObstacleQueue[i]->get_y() - 1);
+        if(birdObstacleQueue[i]->get_y() < -20)
+        {
+          birdObstacleQueue.pop_back();
+        }
+      }
+
       usleep(game_speed);
 
       frames++;
 
       if(crash)
       {
-        usleep(7000000000);
+        //game over
+        return;
       }
 
     }
