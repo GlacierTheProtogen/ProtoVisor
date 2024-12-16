@@ -116,7 +116,8 @@ public:
   void drawColorOption(int r, int b, int g, int floater, int x, int y, bool selected)
   {
 
-    int squareWidth = 12;
+    int squareWidth = 7;
+    int displace = 44;
 
     for(int i = 0; i < squareWidth + 1; i++)
     {
@@ -124,6 +125,12 @@ public:
       canvas()->SetPixel(x + squareWidth, y - floater + i,  r, b, g);
       canvas()->SetPixel(x + i, y - floater, r, b, g);
       canvas()->SetPixel(x + i, y + squareWidth - floater, r, b, g);
+
+      canvas()->SetPixel(x + displace, y - floater + i, r, b, g);
+      canvas()->SetPixel(x + + displace + squareWidth, y - floater + i,  r, b, g);
+      canvas()->SetPixel(x + i + displace, y - floater, r, b, g);
+      canvas()->SetPixel(x + i + displace, y + squareWidth - floater, r, b, g);
+
     }
     if(selected == true)
     {
@@ -132,6 +139,7 @@ public:
         for(int j = y + 1; j < y + squareWidth; j++)
         {
           canvas()->SetPixel(i, j - floater, r, b, g);
+          canvas()->SetPixel(i + displace, j-floater, r, b, g);
         }
       }
     }
@@ -142,6 +150,7 @@ public:
         for(int j = y + 1; j < y + squareWidth; j++)
         {
           canvas()->SetPixel(i, j - floater, 0, 0, 0);
+          canvas()->SetPixel(i + displace, j-floater, 0, 0, 0);
         }
       }
     }

@@ -87,7 +87,6 @@ public:
 
 	button = current_button_pushed(controller1buttons);
 
-
         // FIXME: The number of below if statements sucks. Maybe a dictionary of pointers?
 
 	if(buttonPressed == true)
@@ -105,7 +104,7 @@ public:
 	    buttonPressed = true;
             drawNewFace = true;
 
-	    if(button == 11 || button == 18 || button == 19)
+	    if(button == 18 || button == 7 || button == 11)
             {
               if(currentOption == 0)
               {
@@ -116,7 +115,7 @@ public:
                 currentOption = currentOption - 1;
               }
 	    }
-	    else if(button == 12 || button == 8 || button == 7)
+	    else if(button == 19 || button == 8 || button == 12)
 	    {
               if(currentOption == 7)
               {
