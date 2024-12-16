@@ -298,7 +298,7 @@ public:
           }
           else
           {
-            if(currentFace == positive || currentFace == negative)
+            if(currentFace == positive || currentFace == negative || currentFace == thanks)
             {
               drawFullInput(currentFace, (int)(cosign), g_red, g_green, g_blue);
             }
