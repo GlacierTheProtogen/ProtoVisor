@@ -30,10 +30,11 @@ public:
     bool** poker = FileToFace("poker", false);
     bool** angry = FileToFace("angry", false);
     bool** sad = FileToFace("sad", false);
-    bool** uwu = FileToFace("uwu", false);
+    bool** uwu = TwoFilesToFace("uwu-left", "uwu-right");
     bool** boykisser = FileToFace("boykisser", false);
-    bool** positive = FileToFace("positive", true);
-    bool** negative = FileToFace("negative", true);
+    bool** positive = TwoFilesToFace("positive-left", "positive-right");
+    bool** negative = TwoFilesToFace("negative-left", "negative-right");
+    bool** thanks = TwoFilesToFace("thanks-left", "thanks-right");
     bool** dead = FileToFace("dead", true);
 
     //bool** happyblink = FileToFace("happy-blink", false);
@@ -158,7 +159,6 @@ public:
 
 	button = current_button_pushed(controller1buttons);
 
-
         // FIXME: The number of below if statements sucks. Maybe a dictionary of pointers?
 
 	if(buttonPressed == true)
@@ -230,6 +230,11 @@ public:
             {
               currentFace = happy;
               rave_mode = true;
+            }
+            else if(button == 23)
+            {
+              currentFace = thanks;
+              rave_mode = false;
             }
 
 	 }
