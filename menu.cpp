@@ -43,24 +43,11 @@ public:
 
     }
   }
-  void transitionAnimation(bool** face1, bool** face2, int height, int width, int start_x, int start_y, int r, int b, int g) {
+  void transitionAnimation(bool** face1, bool** face2, bool left, int height, int width, int start_x, int start_y, int r, int b, int g) {
 
     for(int k = 0; k < width; k++)
     {
       canvas()->Clear();
-
-      for(int i = 0; i < height; i++)
-      {
-        for(int j = 0; j < k; j++)
-        {
-          if(face1[i][j] == true)
-          {
-            //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-            canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-          }
-        }
-
-      }
 
       for(int i = 0; i < height; i++)
       {
@@ -69,7 +56,20 @@ public:
           if(face2[i][j] == true)
           {
             //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-            canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
+            canvas()->SetPixel(j + start_y - k, i + start_x, r, g, b);
+          }
+        }
+
+      }
+
+      for(int i = 0; i < height; i++)
+      {
+        for(int j = 0; j < k; j++)
+        {
+          if(face1[i][j] == true)
+          {
+            //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
+            canvas()->SetPixel(j + start_y + (width - k), i + start_x, r, g, b);
           }
         }
 
@@ -117,6 +117,7 @@ public:
 
     int sel = 1;
     int prevsel = sel;
+    bool left = true;
 
     drawSprite(pongFace, menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
 
@@ -177,6 +178,7 @@ public:
                 sel = sel + 1;
               }
 
+              left = true;
               changedOption = true;
 	    }
 	    else if(button == 18 || button == 7 || button == 11)
@@ -192,6 +194,7 @@ public:
                 sel = sel - 1;
               }
 
+              left = false;
               changedOption = true;
             }
             else if(button == 2 && sel == 3)
@@ -250,8 +253,8 @@ public:
             if(changedOption)
             {
               //drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
-              transitionAnimation(MenuScreens[sel], MenuScreens[prevsel], menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
-              drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
+              transitionAnimation(MenuScreens[sel], MenuScreens[prevsel], left, menuSpriteH, menuSpriteW, 2, 16, g_red, g_blue, g_green);
+              drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 2, 16, g_red, g_blue, g_green);
             }
 
 	 }
