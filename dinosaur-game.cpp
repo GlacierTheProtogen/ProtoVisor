@@ -100,23 +100,23 @@ public:
     int dinoFrames = 5; // How many frames pass before switching to the other leg with running animation.
     int birdFrames = 3;
 
-    bool** dino1 = FileToSprite("dino1", dinoH, dinoW);
-    bool** dino2 = FileToSprite("dino2", dinoH, dinoW);
+    bool** dino1 = FileToSprite("dinosaur-game/dino1", dinoH, dinoW);
+    bool** dino2 = FileToSprite("dinosaur-game/dino2", dinoH, dinoW);
 
-    bool** dino1Duck = FileToSprite("dino-ducking1", dinoW, dinoH);
-    bool** dino2Duck = FileToSprite("dino-ducking2", dinoW, dinoH);
+    bool** dino1Duck = FileToSprite("dinosaur-game/dino-ducking1", dinoW, dinoH);
+    bool** dino2Duck = FileToSprite("dinosaur-game/dino-ducking2", dinoW, dinoH);
 
 
-    bool** bird1 = FileToSprite("bird1", birdW, birdH);
-    bool** bird2 = FileToSprite("bird2", birdW, birdH);
+    bool** bird1 = FileToSprite("dinosaur-game/bird1", birdW, birdH);
+    bool** bird2 = FileToSprite("dinosaur-game/bird2", birdW, birdH);
 
-    bool** doublecactus1 = FileToSprite("double-cactus-1", doubleCactusW, doubleCactusH);
-    bool** doublecactus2 = FileToSprite("double-cactus-2", doubleCactusW, doubleCactusH);
+    bool** doublecactus1 = FileToSprite("dinosaur-game/double-cactus-1", doubleCactusW, doubleCactusH);
+    bool** doublecactus2 = FileToSprite("dinosaur-game/double-cactus-2", doubleCactusW, doubleCactusH);
 
-    bool** cactus1 = FileToSprite("cactus1", cactusW, cactusH);
-    bool** cactus2 = FileToSprite("cactus2", cactusW, cactusH);
+    bool** cactus1 = FileToSprite("dinosaur-game/cactus1", cactusW, cactusH);
+    bool** cactus2 = FileToSprite("dinosaur-game/cactus2", cactusW, cactusH);
 
-    bool** multicactus = FileToSprite("multi-cactus", multiCactusW, multiCactusH);
+    bool** multicactus = FileToSprite("dinosaur-game/multi-cactus", multiCactusW, multiCactusH);
 
 
     Dinosaur* dinoSprite = new Dinosaur(dino1, dino2, dino1Duck, dino2Duck, dinoFrames, default_dino_x, default_dino_y, dinoW, dinoH);

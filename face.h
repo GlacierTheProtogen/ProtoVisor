@@ -107,7 +107,7 @@ bool** TwoFilesToFace(std::string filename_left, std::string filename_right)
 //take a face name from the faces/dinosaur-game folder and convert it to a 2d array of bools with a predetermined size. 
 bool** FileToSprite(std::string filename, int height, int width)
 {
-  std::string fullfile="faces/dinosaur-game/"+filename+".txt";
+  std::string fullfile="faces/"+filename+".txt";
   std::ifstream newfile;
   newfile.open(fullfile);
 

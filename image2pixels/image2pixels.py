@@ -15,10 +15,11 @@ if(len(sys.argv) == 3):
 
 pix = im.load()
 
-blacktuple = (0, 0, 0, 255)
+blacktuple = (255, 0, 0, 0)
 
 for i in range(32):
   for j in range(baserange):
+    #print(pix[(im.width/baserange)*j, (im.height/32)*i])
     if(pix[(im.width/baserange)*j, (im.height/32)*i] == blacktuple):
        print("O", end="")
     else:

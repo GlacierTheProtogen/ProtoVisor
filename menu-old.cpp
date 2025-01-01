@@ -29,59 +29,8 @@ public:
   MenuFace(RGBMatrix *m) : Runner(m), matrix_(m) {
     off_screen_canvas_ = m->CreateFrameCanvas();
   }
-  void drawSprite(bool** face, int height, int width, int start_x, int start_y, int r, int b, int g) {
-    for(int i = 0; i < height; i++)
-    {
-      for(int j = 0; j < width; j++)
-      {
-        if(face[i][j] == true)
-        {
-          //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-          canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-        }
-      }
-
-    }
-  }
-  void transitionAnimation(bool** face1, bool** face2, int height, int width, int start_x, int start_y, int r, int b, int g) {
-
-    for(int k = 0; k < width; k++)
-    {
-      canvas()->Clear();
-
-      for(int i = 0; i < height; i++)
-      {
-        for(int j = 0; j < k; j++)
-        {
-          if(face1[i][j] == true)
-          {
-            //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-            canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-          }
-        }
-
-      }
-
-      for(int i = 0; i < height; i++)
-      {
-        for(int j = k; j < width; j++)
-        {
-          if(face2[i][j] == true)
-          {
-            //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-            canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-          }
-        }
-
-      }
-
-      usleep(10000);
-
-    }
-  }
   void Run() override {
     bool** menu = FileToFace("menu-base", true);
-    canvas()->Clear();
 
     int flowcycle = 1280000; // Integer that is used to divide x in the cosign equation. Higher = slower face floating.
     int flowcounter = 0; // Incremented integer that is used for the cosign function.
@@ -92,36 +41,32 @@ public:
     bool drawNewFace = true;
     bool** prevMenu = menu;
 
-    int menuSpriteW = 48;
-    int menuSpriteH = 24;
+    IntTuple* SettingsCoords = new IntTuple(2, 4);
+    IntTuple* PongCoords = new IntTuple(2, 14);
+    IntTuple* DinosaurGameCoords = new IntTuple(2, 24);
+    IntTuple* SnakeCoords = new IntTuple(66, 4);
+    IntTuple* SimonSaysCoords = new IntTuple(66, 14);
+    IntTuple* BackCoords = new IntTuple(66, 24);
 
-    std::string menuList[5];
-    std::map<int, bool**> MenuScreens;
+    std::map<int, IntTuple*> MenuItems;
+    MenuItems.insert(std::make_pair(0, SettingsCoords));
+    MenuItems.insert(std::make_pair(1, PongCoords));
+    MenuItems.insert(std::make_pair(2, DinosaurGameCoords));
+    MenuItems.insert(std::make_pair(3, SnakeCoords));
+    MenuItems.insert(std::make_pair(4, SimonSaysCoords));
+    MenuItems.insert(std::make_pair(5, BackCoords));
 
+    changeOption(currentMenu, SettingsCoords, SettingsCoords);
+    drawFullInput(currentMenu, 0, 0, 0, 255);
 
-    bool** colorFace = FileToSprite("menu/color", menuSpriteH, menuSpriteW);
-    bool** pongFace = FileToSprite("menu/pong", menuSpriteH, menuSpriteW);
-    bool** dinoFace = FileToSprite("menu/dinosaur-game", menuSpriteH, menuSpriteW);
-    bool** snakeFace = FileToSprite("menu/snake", menuSpriteH, menuSpriteW);
-    bool** simonFace = FileToSprite("menu/simon-says", menuSpriteH, menuSpriteW);
-    bool** backFace = FileToSprite("menu/back", menuSpriteH, menuSpriteW);
-
-    bool changedOption = false;
-
-    MenuScreens.insert(std::pair<int, bool**>(0, colorFace));
-    MenuScreens.insert(std::pair<int, bool**>(1, pongFace));
-    MenuScreens.insert(std::pair<int, bool**>(2, dinoFace));
-    MenuScreens.insert(std::pair<int, bool**>(3, snakeFace));
-    MenuScreens.insert(std::pair<int, bool**>(4, simonFace));
-    MenuScreens.insert(std::pair<int, bool**>(5, backFace));
-
-    int sel = 1;
-    int prevsel = sel;
-
-    drawSprite(pongFace, menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
+    // Treat the menu items as an array. Manipulate this number based on what
+    // Input the user presses on the controller. Finally, map out this
+    // Selection on the menu.
+    int sel = 0;
+    int prevsel = 0;
 
     while (!interrupt_received) {
-        changedOption = false;
+
         /* If a button is pressed, maintain the same face that we have been
         drawing. If not, then go back to basic face until a new button is
         pressed */
@@ -129,6 +74,7 @@ public:
         flowcounter++;
         drawNewFace = false;
 
+        prevsel = sel;
 
         double cosign = 2 * cos(flowcounter / flowcycle);
 
@@ -164,10 +110,8 @@ public:
 	    buttonPressed = true;
             drawNewFace = true;
 
-	    if(button == 19 || button == 8 || button == 12)
+	    if(button == 10 || button == 6 || button == 17)
             {
-              prevsel = sel;
-
               if(sel == 5)
               {
                 sel = 0;
@@ -176,13 +120,9 @@ public:
               {
                 sel = sel + 1;
               }
-
-              changedOption = true;
 	    }
-	    else if(button == 18 || button == 7 || button == 11)
+	    else if(button == 9 || button == 5 || button == 16)
 	    {
-              prevsel = sel;
-
               if(sel == 0)
               {
                 sel = 5;
@@ -191,8 +131,10 @@ public:
               {
                 sel = sel - 1;
               }
-
-              changedOption = true;
+            }
+            else if(button == 12 || button == 8 || button == 7 || button == 11 || button == 18 || button == 19)
+            {
+              sel = sel + 3;
             }
             else if(button == 2 && sel == 3)
             {
@@ -209,28 +151,24 @@ public:
               }
 
               delete twoplayer;
-              return;
             }
             else if(button == 2 && sel == 0)
             {
               ColorMenu * colorM = new ColorMenu(matrix_);
               colorM->Run();
               delete colorM;
-              return;
             }
             else if(button == 2 && sel == 4)
             {
               SimonSays * simon = new SimonSays(matrix_);
               simon->Run();
               delete simon;
-              return;
             }
             else if(button == 2 && sel == 2)
             {
               DinosaurGame * dinogame = new DinosaurGame(matrix_);
               dinogame->Run();
               delete dinogame;
-              return;
             }
             else if(button == 2 && sel == 1)
             {
@@ -239,7 +177,6 @@ public:
               Pong * runner = new Pong(matrix_);
               runner->Run();
               delete runner;
-              return;
             }
 
             else if(button == 4 || (button == 2 && sel == 5))
@@ -247,15 +184,19 @@ public:
               return;
             }
 
-            if(changedOption)
-            {
-              //drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
-              transitionAnimation(MenuScreens[sel], MenuScreens[prevsel], menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
-              drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
-            }
+            //sel = abs(sel % 6);
+
+            sel = abs(sel) % 6;
+            changeOption(currentMenu, MenuItems[prevsel], MenuItems[sel]);
 
 	 }
 	}
+
+
+        if(drawNewFace == true)
+        {
+          drawFullInput(currentMenu, (int)(cosign), g_red, g_green, g_blue);
+        }
      }
 
  }
