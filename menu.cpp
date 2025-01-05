@@ -43,39 +43,82 @@ public:
 
     }
   }
-  void transitionAnimation(bool** face1, bool** face2, bool left, int height, int width, int start_x, int start_y, int r, int b, int g) {
+  void transitionAnimation(bool** face1, bool** face2, bool left, int height, int width, int start_x, int start_y, int r, int b, int g, int shift) {
 
-    for(int k = 0; k < width; k++)
+    if(left)
     {
-      canvas()->Clear();
-
-      for(int i = 0; i < height; i++)
+      for(int k = 0; k < width; k++)
       {
-        for(int j = k; j < width; j++)
+        canvas()->Clear();
+
+        for(int i = 0; i < height; i++)
         {
-          if(face2[i][j] == true)
+          for(int j = k; j < width; j++)
           {
-            //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-            canvas()->SetPixel(j + start_y - k, i + start_x, r, g, b);
+            if(face2[i][j] == true)
+            {
+              //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
+              canvas()->SetPixel(j + start_y - k, i + start_x, r, g, b);
+              canvas()->SetPixel(j + start_y - k + shift, i + start_x, r, g, b);
+            }
           }
+
         }
 
-      }
-
-      for(int i = 0; i < height; i++)
-      {
-        for(int j = 0; j < k; j++)
+        for(int i = 0; i < height; i++)
         {
-          if(face1[i][j] == true)
+          for(int j = 0; j < k; j++)
           {
-            //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
-            canvas()->SetPixel(j + start_y + (width - k), i + start_x, r, g, b);
+            if(face1[i][j] == true)
+            {
+              //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
+              canvas()->SetPixel(j + start_y + (width - k - 1), i + start_x, r, g, b);
+              canvas()->SetPixel(j + start_y + (width - k - 1) + shift, i + start_x, r, g, b);
+            }
           }
+
         }
 
-      }
+        usleep(10000);
 
-      usleep(10000);
+        }
+      }
+      else
+      {
+        for(int k = width-1; k >= 0; k--)
+        {
+          canvas()->Clear();
+
+          for(int i = 0; i < height; i++)
+          {
+            for(int j = width - 1; j >= k; j--)
+            {
+              if(face1[i][j] == true)
+              {
+                //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
+                canvas()->SetPixel(j + start_y - k, i + start_x, r, g, b);
+                canvas()->SetPixel(j + start_y - k + shift, i + start_x, r, g, b);
+              }
+            }
+
+          }
+
+          for(int i = 0; i < height; i++)
+          {
+            for(int j = k; j >= 0; j--)
+            {
+              if(face2[i][j] == true)
+              {
+                //canvas()->SetPixel(j + start_y, i + start_x, r, g, b);
+                canvas()->SetPixel(j + start_y + (width - k - 1), i + start_x, r, g, b);
+                canvas()->SetPixel(j + start_y + (width - k - 1) + shift, i + start_x, r, g, b);
+              }
+            }
+
+          }
+
+          usleep(10000);
+        }
 
     }
   }
@@ -99,12 +142,17 @@ public:
     std::map<int, bool**> MenuScreens;
 
 
+    int shift = 54;
+
     bool** colorFace = FileToSprite("menu/color", menuSpriteH, menuSpriteW);
     bool** pongFace = FileToSprite("menu/pong", menuSpriteH, menuSpriteW);
     bool** dinoFace = FileToSprite("menu/dinosaur-game", menuSpriteH, menuSpriteW);
     bool** snakeFace = FileToSprite("menu/snake", menuSpriteH, menuSpriteW);
     bool** simonFace = FileToSprite("menu/simon-says", menuSpriteH, menuSpriteW);
     bool** backFace = FileToSprite("menu/back", menuSpriteH, menuSpriteW);
+
+    bool** rightArrow = FileToSprite("menu/right-arrow", 9, 5);
+    bool** leftArrow = FileToSprite("menu/left-arrow", 9, 5);
 
     bool changedOption = false;
 
@@ -119,7 +167,7 @@ public:
     int prevsel = sel;
     bool left = true;
 
-    drawSprite(pongFace, menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
+    drawSprite(pongFace, menuSpriteH, menuSpriteW, 2, 16, g_red, g_blue, g_green);
 
     while (!interrupt_received) {
         changedOption = false;
@@ -132,6 +180,7 @@ public:
 
 
         double cosign = 2 * cos(flowcounter / flowcycle);
+       
 
         if(flowcountercompare != (int)(cosign))
         {
@@ -139,11 +188,7 @@ public:
           drawNewFace = true;
         }
 
-        if(prevMenu != currentMenu)
-        {
-          prevMenu = currentMenu;
-          drawNewFace = true;
-        }
+
 
 	button = current_button_pushed(controller1buttons);
 
@@ -253,11 +298,27 @@ public:
             if(changedOption)
             {
               //drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 4, 20, g_red, g_blue, g_green);
-              transitionAnimation(MenuScreens[sel], MenuScreens[prevsel], left, menuSpriteH, menuSpriteW, 2, 16, g_red, g_blue, g_green);
-              drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 2, 16, g_red, g_blue, g_green);
+              transitionAnimation(MenuScreens[sel], MenuScreens[prevsel], left, menuSpriteH, menuSpriteW, 2, 13, g_red, g_blue, g_green, shift);
+              drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 2, 13, g_red, g_blue, g_green);
+              drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 2, 13 + shift, g_red, g_blue, g_green);
             }
 
+
 	 }
+
+         if(drawNewFace)
+         {
+           canvas()->Clear();
+           drawSprite(leftArrow, 9, 5, 10, 12 - flowcountercompare, g_red, g_blue, g_green);
+           drawSprite(rightArrow, 9, 5, 10, 58 + flowcountercompare, g_red, g_blue, g_green);
+
+           drawSprite(leftArrow, 9, 5, 10, 12 - flowcountercompare + shift, g_red, g_blue, g_green);
+           drawSprite(rightArrow, 9, 5, 10, 58 + flowcountercompare + shift, g_red, g_blue, g_green);
+
+           drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 2, 13, g_red, g_blue, g_green);
+           drawSprite(MenuScreens[sel], menuSpriteH, menuSpriteW, 2, 13 + shift, g_red, g_blue, g_green);
+         }
+
 	}
      }
 
