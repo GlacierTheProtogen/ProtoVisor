@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include <unistd.h>
+#include <map>
 
 // Return what the dino's next y value should be based on how many frames he's been in the air, where he is now, and the ground.
 
@@ -22,6 +23,86 @@ int nextYvalue(int frames, int ground, int prev_y, double initial_velocity)
 
 }
 
+
+// Returning a sprite based off of the digits from an input int
+
+bool** intToSprite(int score, std::map<int, bool**> digitMap)
+{
+
+  int numDigits = 10;
+  int width = numDigits * 3 + numDigits - 1;
+
+
+  std::string converted = std::to_string(score);
+  std::string final;
+
+  int scoreLength = converted.length();
+
+  for(int i = 0; i < numDigits; i++)
+  {
+    if(i > scoreLength -1)
+    {
+      final = "0" + final;
+    }
+    else
+    {
+      final = final + converted[i];
+    }
+  }
+
+
+  bool** scoreSprite = 0;
+  scoreSprite=new bool*[5];
+
+  for(int i = 0; i < 5; i++)
+  {
+    scoreSprite[i] = new bool[width];
+
+    int iter = 0;
+
+    for(int j = 0; j < numDigits; j++)
+    {
+
+      int digIter = (int)(final[j]) - 48;
+
+      for(int k = 0; k < 3; k++)
+      {
+        if(digitMap[digIter][i][k])
+        {
+          scoreSprite[i][iter]=true;
+          iter++;
+        }
+        else
+        {
+          scoreSprite[i][iter]=false;
+          iter++;
+        }
+
+      }
+
+      scoreSprite[i][iter]=false;
+      iter++;
+
+    }
+
+  }
+
+  /***
+
+  std::cout << "printing the score:" << std::endl;
+  for(int i = 0; i < ; i++)
+  {
+    for(int j = 0; j < 39; j++)
+    {
+      std::cout << scoreSprite[i][j];
+    }
+
+    std::cout << std::endl;
+  }
+  ***/
+
+  return scoreSprite;
+}
 
 //Dinosaur Object. Assumes that the ducking sprite has the height and width inverted from the regular sprite.
 class Dinosaur {

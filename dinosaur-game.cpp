@@ -5,7 +5,7 @@
 #include "ground-obstacle.h"
 #include "animated-sprite.h"
 #include "bird-obstacle.h"
-
+#include <map>
 
 #include <chrono>
 #include <deque>
@@ -97,11 +97,40 @@ public:
     int multiCactusW = 36;
     int multiCactusH = 20;
 
+    std::map<int, bool**> digits;
+
+    int digitH = 5;
+    int digitW = 3;
+
+
     int dinoFrames = 5; // How many frames pass before switching to the other leg with running animation.
     int birdFrames = 3;
 
     bool** dino1 = FileToSprite("dinosaur-game/dino1", dinoH, dinoW);
     bool** dino2 = FileToSprite("dinosaur-game/dino2", dinoH, dinoW);
+
+    bool** one = FileToSprite("numbers/one", digitH, digitW);
+    bool** two = FileToSprite("numbers/two", digitH, digitW);
+    bool** three = FileToSprite("numbers/three", digitH, digitW);
+    bool** four = FileToSprite("numbers/four", digitH, digitW);
+    bool** five = FileToSprite("numbers/five", digitH, digitW);
+    bool** six = FileToSprite("numbers/six", digitH, digitW);
+    bool** seven = FileToSprite("numbers/seven", digitH, digitW);
+    bool** eight = FileToSprite("numbers/eight", digitH, digitW);
+    bool** nine = FileToSprite("numbers/nine", digitH, digitW);
+    bool** zero = FileToSprite("numbers/zero", digitH, digitW);
+
+    digits.insert(std::pair<int, bool**>(0, zero));
+    digits.insert(std::pair<int, bool**>(1, one));
+    digits.insert(std::pair<int, bool**>(2, two));
+    digits.insert(std::pair<int, bool**>(3, three));
+    digits.insert(std::pair<int, bool**>(4, four));
+    digits.insert(std::pair<int, bool**>(5, five));
+    digits.insert(std::pair<int, bool**>(6, six));
+    digits.insert(std::pair<int, bool**>(7, seven));
+    digits.insert(std::pair<int, bool**>(8, eight));
+    digits.insert(std::pair<int, bool**>(9, nine));
+
 
     bool** dino1Duck = FileToSprite("dinosaur-game/dino-ducking1", dinoW, dinoH);
     bool** dino2Duck = FileToSprite("dinosaur-game/dino-ducking2", dinoW, dinoH);
@@ -279,6 +308,15 @@ public:
           birdObstacleQueue.pop_back();
         }
       }
+
+
+      int score = frames % 400;
+
+      bool** scoreBoard = intToSprite(score, digits);
+
+      drawSprite(scoreBoard, 5, 39, 0, 0, g_red, g_green, g_blue);
+
+      delete scoreBoard;
 
       usleep(game_speed);
 
