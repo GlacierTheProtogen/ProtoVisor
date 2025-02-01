@@ -129,7 +129,6 @@ public:
           runner->Run();
 
           delete runner;
-
         }
 
         if((flowcounter % eye_open_counter) < eye_closed_counter && isBlinking == false)

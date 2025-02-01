@@ -93,6 +93,11 @@ public:
             {
               if(firstrun)
               {
+                delete OneLeftCoords;
+                delete TwoLeftCoords;
+                delete OneRightCoords;
+                delete TwoRightCoords;
+                freeFace(currentMenu, 32);
                 return curselection;
               }
               else
@@ -103,6 +108,11 @@ public:
 
             else if(button == 4)
             {
+              delete OneLeftCoords;
+              delete TwoLeftCoords;
+              delete OneRightCoords;
+              delete TwoRightCoords;
+              freeFace(currentMenu, 32);
               return 0;
             }
 

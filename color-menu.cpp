@@ -138,6 +138,12 @@ public:
               g_red = MenuItems[currentOption]->getRed();
               g_green = MenuItems[currentOption]->getGreen();
               g_blue = MenuItems[currentOption]->getBlue();
+              freeFace(menu, 32);
+
+              for(int i = 0; i < MenuItems.size(); i++)
+              {
+                delete MenuItems[i];
+              }
               return;
             }
             else if(button == 2 && selectPushedOnce == false)

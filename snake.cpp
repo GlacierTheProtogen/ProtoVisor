@@ -26,7 +26,12 @@ void prepareFood(std::deque<IntTuple*> &food)
   for(int i = 0; i < 6; i++)
   {
     int xrand = (getRandInt() % 31);
-    int yrand = (getRandInt() % 127);
+    int yrand = (getRandInt() % 106);
+
+    if(yrand < 22)
+    {
+      yrand = yrand + 22;
+    }
 
     xrand = xrand - (xrand % 2);
     yrand = yrand - (yrand % 2);
@@ -71,7 +76,7 @@ bool checkCollision(std::deque<IntTuple*> &p1snake, int x, int y)
     }
   }
 
-  if(x < 0 || x == 32 || y < 0 || y == 128)
+  if(x < 0 || x == 32 || y < 21 || y == 108)
   {
     return true;
   }
@@ -113,6 +118,14 @@ public:
   virtual void Run() override {
     std::cout << "Run function for snake is RunSnake()" << std::endl;
   }
+  void drawBoundaries()
+  {
+    for(int i = 0; i < 32; i++)
+    {
+      canvas()->SetPixel(20, i, 255, 255, 255);
+      canvas()->SetPixel(108, i, 255, 255, 255);
+    }
+  }
   void drawBlipArray(std::deque<IntTuple*> &array, int r, int g, int b)
   {
     for(long unsigned int i = 0; i < array.size(); i++)
@@ -141,7 +154,7 @@ public:
 
         for(int i = 0; i < 32; i +=2)
         {
-          for(int j = 0; j < 128; j +=2)
+          for(int j = 22; j < 108; j +=2)
           {
             if(face[i][j] == false)
             {
@@ -184,7 +197,7 @@ public:
 
         for(int i = 0; i < 32; i +=2)
         {
-          for(int j = 0; j < 128; j +=2)
+          for(int j = 22; j < 108; j +=2)
           {
             if(face[i][j] == false)
             {
@@ -212,7 +225,13 @@ public:
 
   }
 
-
+  void freeSnakeMem(std::deque<IntTuple*> &snake)
+  {
+    for(int i = 0; i < snake.size(); i++)
+    {
+      delete(snake[i]);
+    }
+  }
 
   void RunSnake(int players) {
     bool** menu = FileToFace("blank-base", true);
@@ -227,19 +246,19 @@ public:
     int p2direction = 1;
 
 
-    IntTuple* Player1Start1 = new IntTuple(2, 4);
-    IntTuple* Player1Start2 = new IntTuple(2, 6);
-    IntTuple* Player1Start3 = new IntTuple(2, 8);
-    IntTuple* Player1Start4 = new IntTuple(2, 10);
-    IntTuple* Player1Start5 = new IntTuple(2, 12);
-    IntTuple* Player1Start6 = new IntTuple(2, 14);
+    IntTuple* Player1Start1 = new IntTuple(2, 24);
+    IntTuple* Player1Start2 = new IntTuple(2, 26);
+    IntTuple* Player1Start3 = new IntTuple(2, 28);
+    IntTuple* Player1Start4 = new IntTuple(2, 30);
+    IntTuple* Player1Start5 = new IntTuple(2, 32);
+    IntTuple* Player1Start6 = new IntTuple(2, 34);
 
-    IntTuple* Player2Start1 = new IntTuple(2, 124);
-    IntTuple* Player2Start2 = new IntTuple(2, 122);
-    IntTuple* Player2Start3 = new IntTuple(2, 120);
-    IntTuple* Player2Start4 = new IntTuple(2, 118);
-    IntTuple* Player2Start5 = new IntTuple(2, 116);
-    IntTuple* Player2Start6 = new IntTuple(2, 114);
+    IntTuple* Player2Start1 = new IntTuple(2, 104);
+    IntTuple* Player2Start2 = new IntTuple(2, 102);
+    IntTuple* Player2Start3 = new IntTuple(2, 100);
+    IntTuple* Player2Start4 = new IntTuple(2, 98);
+    IntTuple* Player2Start5 = new IntTuple(2, 96);
+    IntTuple* Player2Start6 = new IntTuple(2, 94);
 
     std::deque<IntTuple*> p1snake;
     std::deque<IntTuple*> p2snake;
@@ -405,6 +424,10 @@ public:
             // Player 1 victory
             Victory* victory = new Victory(matrix_);
             victory->VictorRun(1);
+            delete victory;
+            freeSnakeMem(p1snake);
+            freeSnakeMem(p2snake);
+            freeSnakeMem(Food);
             return;
           }
           else if(checkCollision(p1snake, p1x_axis, p1y_axis))
@@ -413,6 +436,9 @@ public:
             Victory* victory = new Victory(matrix_);
             victory->VictorRun(2);
             delete victory;
+            freeSnakeMem(p1snake);
+            freeSnakeMem(p2snake);
+            freeSnakeMem(Food);
             return;
           }
         }
@@ -420,6 +446,8 @@ public:
           //Just return if it's one player and they collide
           if(checkCollision(p1snake, p1x_axis, p1y_axis))
           {
+            freeSnakeMem(p1snake);
+            freeSnakeMem(Food);
             return;
           }
         }
@@ -515,6 +543,8 @@ public:
         }
 
         canvas()->Clear();
+
+        drawBoundaries();
 
         drawBlipArray(Food, 255, 255, 255);
         drawBlipArray(p1snake, 0, 0, 255);

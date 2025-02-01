@@ -155,10 +155,12 @@ public:
       }
     }
   }
-  virtual ~Runner() {}
   virtual void Run() = 0;
+
+  virtual ~Runner() {}
 private:
   Canvas *const canvas_;
+
 
 };
 

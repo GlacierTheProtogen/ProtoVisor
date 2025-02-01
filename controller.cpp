@@ -87,7 +87,7 @@ const int R_TRIGGER_2 = 272;
  The controller is initiated by:
  1. Create an arry of timestamps
  2. Create an infinite loop that detects
- key presses from /dev/input/* using libevdev
+ key presses from dev input* using libevdev
  and xboxdrv library
  3. If we want to see if a button is pressed,
  compare the timestamp with the current time

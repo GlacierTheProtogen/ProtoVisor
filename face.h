@@ -26,22 +26,22 @@ bool** FileToFace(std::string filename, bool full)
   std::string iter;
   int columniter = 0;
   while(getline(newfile, iter)){
-      face2D[columniter] = new bool[width];
-      for(int j = 0; j < width; j++)
-      {
-          if(iter[j] == 'X')
-          {
-            face2D[columniter][j] = true;
-          }
-          else
-          {
-            face2D[columniter][j] = false;
-          }
+    face2D[columniter] = new bool[width];
+
+     for(int j = 0; j < width; j++)
+     {
+        if(j < iter.length() && iter[j] == 'X')
+        {
+           face2D[columniter][j] = true;
+        }
+        else
+        {
+           face2D[columniter][j] = false;
+        }
       }
 
       columniter++;
-   }
-
+  }
   return face2D;
 
 }
@@ -84,8 +84,8 @@ bool** TwoFilesToFace(std::string filename_left, std::string filename_right)
   columniter = 0;
 
   while(getline(newfile_right, iter)){
-    for(int j = 0; j < width; j++)
-    {
+   for(int j = 0; j < width; j++)
+   {
       if(iter[j] == 'X')
       {
         face2D[columniter][j + width] = true;
@@ -114,27 +114,43 @@ bool** FileToSprite(std::string filename, int height, int width)
   bool** face2D = 0;
   face2D = new bool*[height];
 
+
+  for(int i = 0; i < height; i++)
+  {
+    face2D[i] = new bool[width]();
+  }
+
+
   std::string iter;
   int columniter = 0;
-  while(getline(newfile, iter)){
-    face2D[columniter] = new bool[width];
+
+  while(getline(newfile, iter) && columniter < height){
     for(int j = 0; j < width; j++)
     {
-      if(iter[j] == 'X')
+      if(j < iter.length() && iter[j] == 'X')
       {
         face2D[columniter][j] = true;
-      }
-      else
-      {
-        face2D[columniter][j] = false;
       }
     }
 
     columniter++;
   }
 
+  newfile.close();
+
   return face2D;
 
+}
+
+
+
+void freeFace(bool** face2D, int rows) {
+
+    for (int i = 0; i < rows; i++)
+    {
+      delete[] face2D[i]; // Free each row
+    }
+    delete[] face2D; // Free the array of row pointers
 }
 
 

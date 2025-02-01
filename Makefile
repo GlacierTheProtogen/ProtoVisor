@@ -1,4 +1,4 @@
-CFLAGS=-Wall -g -O3 -Wextra `pkg-config --cflags --libs libevdev`
+CFLAGS=-fsanitize=address -Wall -Wextra -Wpedantic -Wshadow -g -Og -Wextra `pkg-config --cflags --libs libevdev`
 CXXFLAGS=$(CFLAGS)
 OBJECTS=protovisor.o runner.o controller.o menu.o 2player-menu.o countdown.o snake.o victory.o pong.o simon-says.o dinosaur-game.o color-menu.o
 BINARIES=protovisor
@@ -7,8 +7,9 @@ RGB_LIB_DISTRIBUTION=/home/dietpi/workspace/rpi-rgb-led-matrix
 RGB_INCDIR=$(RGB_LIB_DISTRIBUTION)/include
 RGB_LIBDIR=$(RGB_LIB_DISTRIBUTION)/lib
 RGB_LIBRARY_NAME=rgbmatrix
+
 RGB_LIBRARY=$(RGB_LIBDIR)/lib$(RGB_LIBRARY_NAME).a
-LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -lrt -lm -lpthread `pkg-config --cflags --libs libevdev`
+LDFLAGS+=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -fsanitize=address -lrt -g -lm -lpthread `pkg-config --cflags --libs libevdev`
 
 MAGICK_CXXFLAGS?=$(shell GraphicsMagick++-config --cppflags --cxxflags)
 MAGICK_LDFLAGS=$(shell GraphicsMagick++-config --ldflags --libs)

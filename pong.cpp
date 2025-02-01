@@ -374,6 +374,13 @@ public:
        Victory* victory = new Victory(matrix_);
        victory->VictorRun(1);
        delete victory;
+
+       for(int i = 0; i < p1paddle.size(); i++)
+       {
+         delete p1paddle[i];
+         delete p2paddle[i];
+       }
+
        return;
      }
 
@@ -384,6 +391,14 @@ public:
        Victory* victory = new Victory(matrix_);
        victory->VictorRun(2);
        delete victory;
+
+       for(int i = 0; i < p1paddle.size(); i++)
+       {
+         delete p1paddle[i];
+         delete p2paddle[i];
+       }
+
+
        return;
      }
 

@@ -180,7 +180,6 @@ public:
 
 
         double cosign = 2 * cos(flowcounter / flowcycle);
-       
 
         if(flowcountercompare != (int)(cosign))
         {
@@ -246,6 +245,8 @@ public:
             {
               TwoPlayerMenuFace * twoplayer = new TwoPlayerMenuFace(matrix_);
               int option = twoplayer->GetAnswer();
+              delete twoplayer;
+
 
               if(option > 0)
               {
@@ -254,9 +255,18 @@ public:
                 Snake * runner = new Snake(matrix_);
                 runner->RunSnake(option);
                 delete runner;
+                delete countdown;
+                freeFace(menu, 32);
+                freeFace(colorFace, menuSpriteH);
+                freeFace(pongFace, menuSpriteH);
+                freeFace(dinoFace, menuSpriteH);
+                freeFace(snakeFace, menuSpriteH);
+                freeFace(simonFace, menuSpriteH);
+                freeFace(backFace, menuSpriteH);
+                freeFace(rightArrow, 9);
+                freeFace(leftArrow, 9);
               }
 
-              delete twoplayer;
               return;
             }
             else if(button == 2 && sel == 0)
@@ -264,6 +274,15 @@ public:
               ColorMenu * colorM = new ColorMenu(matrix_);
               colorM->Run();
               delete colorM;
+              freeFace(menu, 32);
+              freeFace(colorFace, menuSpriteH);
+              freeFace(pongFace, menuSpriteH);
+              freeFace(dinoFace, menuSpriteH);
+              freeFace(snakeFace, menuSpriteH);
+              freeFace(simonFace, menuSpriteH);
+              freeFace(backFace, menuSpriteH);
+              freeFace(rightArrow, 9);
+              freeFace(leftArrow, 9);
               return;
             }
             else if(button == 2 && sel == 4)
@@ -271,6 +290,15 @@ public:
               SimonSays * simon = new SimonSays(matrix_);
               simon->Run();
               delete simon;
+              freeFace(menu, 32);
+              freeFace(colorFace, menuSpriteH);
+              freeFace(pongFace, menuSpriteH);
+              freeFace(dinoFace, menuSpriteH);
+              freeFace(snakeFace, menuSpriteH);
+              freeFace(simonFace, menuSpriteH);
+              freeFace(backFace, menuSpriteH);
+              freeFace(rightArrow, 9);
+              freeFace(leftArrow, 9);
               return;
             }
             else if(button == 2 && sel == 2)
@@ -278,6 +306,15 @@ public:
               DinosaurGame * dinogame = new DinosaurGame(matrix_);
               dinogame->Run();
               delete dinogame;
+              freeFace(menu, 32);
+              freeFace(colorFace, menuSpriteH);
+              freeFace(pongFace, menuSpriteH);
+              freeFace(dinoFace, menuSpriteH);
+              freeFace(snakeFace, menuSpriteH);
+              freeFace(simonFace, menuSpriteH);
+              freeFace(backFace, menuSpriteH);
+              freeFace(rightArrow, 9);
+              freeFace(leftArrow, 9);
               return;
             }
             else if(button == 2 && sel == 1)
@@ -286,12 +323,31 @@ public:
               countdown->Run();
               Pong * runner = new Pong(matrix_);
               runner->Run();
+              delete countdown;
               delete runner;
+              freeFace(menu, 32);
+              freeFace(colorFace, menuSpriteH);
+              freeFace(pongFace, menuSpriteH);
+              freeFace(dinoFace, menuSpriteH);
+              freeFace(snakeFace, menuSpriteH);
+              freeFace(simonFace, menuSpriteH);
+              freeFace(backFace, menuSpriteH);
+              freeFace(rightArrow, 9);
+              freeFace(leftArrow, 9);
               return;
             }
 
             else if(button == 4 || (button == 2 && sel == 5))
             {
+              freeFace(menu, 32);
+              freeFace(colorFace, menuSpriteH);
+              freeFace(pongFace, menuSpriteH);
+              freeFace(dinoFace, menuSpriteH);
+              freeFace(snakeFace, menuSpriteH);
+              freeFace(simonFace, menuSpriteH);
+              freeFace(backFace, menuSpriteH);
+              freeFace(rightArrow, 9);
+              freeFace(leftArrow, 9);
               return;
             }
 
@@ -322,7 +378,7 @@ public:
 	}
      }
 
- }
+ };
  private:
    RGBMatrix *const matrix_;
    FrameCanvas *off_screen_canvas_;
