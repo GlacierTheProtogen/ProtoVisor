@@ -41,7 +41,9 @@ public:
     int button; // Button that is pressed.
     bool buttonPressed = false; // Wether or not a button is pressed.
 
-    int game_speed = 25000;
+    int game_speed = 22000;
+    int speed_iter = 0;
+
 
     canvas()->Clear();
 
@@ -157,6 +159,8 @@ public:
 
     while (!interrupt_received){
 
+      speed_iter++;
+
       for(int i = 0; i < 128; i++)
       {
         canvas()->SetPixel(i, ground[i], g_red, g_green, g_blue);
@@ -186,18 +190,84 @@ public:
         ground.push_back(23 - lumps[ground_lump_iter]);
       }
 
+      // If there are no more than two cactuses or birds on theplaying field at the same time, randomly spawn another one.
+      // Birds get a random height and a random cactus gets spawned.
 
-      if((frames % 200) == 0)
+      bool birdJustSpawned = false;
+      bool groundJustSpawned = false;
+
+
+      for(int i = 0; i < birdObstacleQueue.size(); i++)
+      {
+        if(birdObstacleQueue[i]->get_y() > 80)
+        {
+          birdJustSpawned = true;
+        }
+      }
+
+      for(int i = 0; i < groundObstacleQueue.size(); i++)
+      {
+        if(groundObstacleQueue[i]->get_y() > 80)
+        {
+          groundJustSpawned = true;
+        }
+      }
+
+      int spawnChance = 600;
+
+      int spawnGround = getRandInt() % spawnChance;
+      int spawnBird = getRandInt() % spawnChance;
+
+      if(spawnGround > spawnChance - 10  && groundObstacleQueue.size() < 3 && !birdJustSpawned && !groundJustSpawned && frames > 60)
       {
         //spawn an enemy
-        groundObstacle* gobst = new groundObstacle(cactus1, spriteGround, 140, 20, 12);
+        bool** enemySprite;
+
+        int enemyHeight;
+        int enemyWidth;
+
+        if(spawnGround >= spawnChance - 2)
+        {
+          enemySprite = cactus1;
+          enemyHeight = cactusH;
+          enemyWidth = cactusW;
+        }
+        else if(spawnGround >= spawnChance - 4)
+        {
+          enemySprite = cactus2;
+          enemyHeight = cactusH;
+          enemyWidth = cactusW;
+        }
+        else if(spawnGround >= spawnChance - 6)
+        {
+          enemySprite = multicactus;
+          enemyHeight = multiCactusH;
+          enemyWidth = multiCactusW;
+        }
+        else if(spawnGround >= spawnChance - 8)
+        {
+          enemySprite = doublecactus1;
+          enemyHeight = doubleCactusH;
+          enemyWidth = doubleCactusW;
+        }
+        else
+        {
+          enemySprite = doublecactus2;
+          enemyHeight = doubleCactusH;
+          enemyWidth = doubleCactusW;
+        }
+
+        groundObstacle* gobst = new groundObstacle(enemySprite, spriteGround + 2, 140, enemyWidth, enemyHeight);
         groundObstacleQueue.push_back(gobst);
       }
 
-      if((frames % 200) == 0)
+      if(spawnBird > spawnChance - 10 && birdObstacleQueue.size() < 3 && !groundJustSpawned)
       {
         //spawn a bird
-        birdObstacle* bobst = new birdObstacle(bird1, bird2, 10, 140, 15, 15, 15);
+
+        int birdBuffer = spawnBird - spawnChance - 10;
+
+        birdObstacle* bobst = new birdObstacle(bird1, bird2, 12 + birdBuffer, 140, 15, 15, 15);
         birdObstacleQueue.push_back(bobst);
       }
 
@@ -248,8 +318,8 @@ public:
 
       for(int i = 0; i < groundObstacleQueue.size(); i++)
       {
-        drawSprite(groundObstacleQueue[i]->getSpriteReference(), 20, 12, spriteGround, groundObstacleQueue[i]->get_y(), g_red, g_green, g_blue);
-        if(dinoSprite->detectCollission(20, 12, groundObstacleQueue[i]->get_x(), groundObstacleQueue[i]->get_y(), frames))
+        drawSprite(groundObstacleQueue[i]->getSpriteReference(), groundObstacleQueue[i]->get_h(), groundObstacleQueue[i]->get_w(), spriteGround + 2, groundObstacleQueue[i]->get_y(), g_red, g_green, g_blue);
+        if(dinoSprite->detectCollission(groundObstacleQueue[i]->get_h(), groundObstacleQueue[i]->get_w(), groundObstacleQueue[i]->get_x(), groundObstacleQueue[i]->get_y(), frames))
         {
           crash = true;
         }
@@ -257,8 +327,8 @@ public:
 
       for(int i = 0; i < birdObstacleQueue.size(); i++)
       {
-        drawSprite(birdObstacleQueue[i]->getSpriteReference(frames), 15, 15, birdObstacleQueue[i]->get_x(), birdObstacleQueue[i]->get_y(), g_red, g_green, g_blue);
-        if(dinoSprite->detectCollission(15, 15, birdObstacleQueue[i]->get_x(), birdObstacleQueue[i]->get_y(), frames))
+        drawSprite(birdObstacleQueue[i]->getSpriteReference(frames), birdW, birdH, birdObstacleQueue[i]->get_x(), birdObstacleQueue[i]->get_y(), g_red, g_green, g_blue);
+        if(dinoSprite->detectCollission(birdW, birdH, birdObstacleQueue[i]->get_x(), birdObstacleQueue[i]->get_y(), frames))
         {
           crash = true;
         }
@@ -296,7 +366,7 @@ public:
         groundObstacleQueue[i]->set_y(groundObstacleQueue[i]->get_y() - 1);
         if(groundObstacleQueue[i]->get_y() < -20)
         {
-          groundObstacleQueue.pop_back();
+          groundObstacleQueue.erase(groundObstacleQueue.begin());
         }
       }
 
@@ -305,20 +375,27 @@ public:
         birdObstacleQueue[i]->set_y(birdObstacleQueue[i]->get_y() - 1);
         if(birdObstacleQueue[i]->get_y() < -20)
         {
-          birdObstacleQueue.pop_back();
+          birdObstacleQueue.erase(birdObstacleQueue.begin());
         }
       }
 
 
-      int score = frames % 400;
+      int score = frames;
 
       bool** scoreBoard = intToSprite(score, digits);
 
       drawSprite(scoreBoard, 5, 39, 0, 0, g_red, g_green, g_blue);
 
-      delete scoreBoard;
+      for (int i = 0; i < 5; i++)
+      {
+        delete[] scoreBoard[i];
+      }
+
+      delete[] scoreBoard;
 
       usleep(game_speed);
+
+      game_speed = game_speed - 2;
 
       frames++;
 

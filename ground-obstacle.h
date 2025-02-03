@@ -10,8 +10,8 @@ class groundObstacle {
       initial_x = startingPointX;
       initial_y = startingPointY;
       sprite = importedSprite;
-      sprite_size_x = sprite_size_x;
-      sprite_size_y = sprite_size_y;
+      size_x = sprite_size_x;
+      size_y = sprite_size_y;
     }
     bool** getSpriteReference()
     {
@@ -24,6 +24,14 @@ class groundObstacle {
     int get_x()
     {
       return initial_x;
+    }
+    int get_w()
+    {
+      return size_y;
+    }
+    int get_h()
+    {
+      return size_x;
     }
     void set_y(int y)
     {

@@ -30,7 +30,7 @@ bool** intToSprite(int score, std::map<int, bool**> digitMap)
 {
 
   int numDigits = 10;
-  int width = numDigits * 3 + numDigits - 1;
+  int width = numDigits * 4 - 1;
 
 
   std::string converted = std::to_string(score);
@@ -51,12 +51,12 @@ bool** intToSprite(int score, std::map<int, bool**> digitMap)
   }
 
 
-  bool** scoreSprite = 0;
-  scoreSprite=new bool*[5];
+  bool** scoreSprite = new bool*[5];
+  //scoreSprite=new bool*[5];
 
   for(int i = 0; i < 5; i++)
   {
-    scoreSprite[i] = new bool[width];
+    scoreSprite[i] = new bool[width]{false};
 
     int iter = 0;
 
@@ -65,8 +65,19 @@ bool** intToSprite(int score, std::map<int, bool**> digitMap)
 
       int digIter = (int)(final[j]) - 48;
 
+      if (digitMap.find(digIter) == digitMap.end()) continue;
+
       for(int k = 0; k < 3; k++)
       {
+
+
+        if(iter < width)
+        {
+          scoreSprite[i][iter] = digitMap[digIter][i][k];
+          iter++;
+        }
+
+      /**
         if(digitMap[digIter][i][k])
         {
           scoreSprite[i][iter]=true;
@@ -77,11 +88,14 @@ bool** intToSprite(int score, std::map<int, bool**> digitMap)
           scoreSprite[i][iter]=false;
           iter++;
         }
-
+      **/
       }
 
-      scoreSprite[i][iter]=false;
-      iter++;
+      if (iter < width)
+      {
+        scoreSprite[i][iter]=false;
+        iter++;
+      }
 
     }
 
@@ -129,7 +143,7 @@ class Dinosaur {
       int local_width;
       int local_height;
 
-      int collissionDistance = 7;
+      int collissionDistance = 10;
 
       if(isDucking)
       {

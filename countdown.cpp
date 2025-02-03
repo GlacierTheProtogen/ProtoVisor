@@ -23,6 +23,10 @@ public:
     drawPortalColors(one);
     usleep(delaytime);
 
+    freeFace(three, 32);
+    freeFace(two, 32);
+    freeFace(one, 32);
+
     return;
 
  }
