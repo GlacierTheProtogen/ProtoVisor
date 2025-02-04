@@ -25,6 +25,7 @@ public:
     //FIXME: The following should be objects.
 
     bool** happy = FileToFace("happy", false);
+    bool** happyWide = FileToFace("happy-wide", false);
     bool** base = FileToFace("baseface", false);
     bool** heart = FileToFace("heart", false);
     bool** poker = FileToFace("poker", false);
@@ -36,6 +37,8 @@ public:
     bool** negative = TwoFilesToFace("negative-left", "negative-right");
     bool** thanks = TwoFilesToFace("thanks-left", "thanks-right");
     bool** dead = FileToFace("dead", true);
+    bool** hi = TwoFilesToFace("hi-left", "hi-right");
+
 
     //bool** happyblink = FileToFace("happy-blink", false);
     bool** baseblink = FileToFace("baseface-blink", false);
@@ -225,12 +228,17 @@ public:
               currentFace = negative;
               rave_mode = false;
             }
+            else if(button == 20)
+            {
+              currentFace = hi;
+              rave_mode = false;
+            }
             else if(button == 22)
             {
-              currentFace = happy;
+              currentFace = happyWide;
               rave_mode = true;
             }
-            else if(button == 23)
+            else if(button == 21)
             {
               currentFace = thanks;
               rave_mode = false;
@@ -297,7 +305,7 @@ public:
           }
           else
           {
-            if(currentFace == positive || currentFace == negative || currentFace == thanks)
+            if(currentFace == positive || currentFace == negative || currentFace == thanks || currentFace == hi)
             {
               drawFullInput(currentFace, (int)(cosign), g_red, g_green, g_blue);
             }
