@@ -156,17 +156,25 @@ class Dinosaur {
         local_width = frame_height;
       }
 
-      int dino_rad_x = getInitX() + (local_width/2);
-      int dino_rad_y = getInitY() + (local_height/2);
+      //int dino_rad_x = getInitX() + (local_width/2);
+      //int dino_rad_y = getInitY() + (local_height/2);
 
-      int ref_rad_x = start_ref_x + (ref_width/2);
-      int ref_rad_y = start_ref_y + (ref_height/2);
+      //int ref_rad_x = start_ref_x + (ref_width/2);
+      //int ref_rad_y = start_ref_y + (ref_height/2);
+
+      //int x_difference = ref_rad_y - dino_rad_x;
+      //int y_difference = ref_rad_x - dino_rad_y;
+
+      int dino_rad_x = getInitX() + (local_height/2);
+      int dino_rad_y = getInitY() + (local_width/2);
+
+      int ref_rad_x = start_ref_x + (ref_height/2);
+      int ref_rad_y = start_ref_y + (ref_width/2);
 
       int x_difference = ref_rad_y - dino_rad_x;
       int y_difference = ref_rad_x - dino_rad_y;
 
       double distance = sqrt((x_difference * x_difference) + (y_difference * y_difference));
-
 
       if(distance < collissionDistance)
       {

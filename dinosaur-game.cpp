@@ -257,7 +257,7 @@ public:
           enemyWidth = doubleCactusW;
         }
 
-        groundObstacle* gobst = new groundObstacle(enemySprite, spriteGround + 2, 140, enemyWidth, enemyHeight);
+        groundObstacle* gobst = new groundObstacle(enemySprite, spriteGround + 1 , 140, enemyWidth, enemyHeight);
         groundObstacleQueue.push_back(gobst);
       }
 
@@ -318,7 +318,7 @@ public:
 
       for(int i = 0; i < groundObstacleQueue.size(); i++)
       {
-        drawSprite(groundObstacleQueue[i]->getSpriteReference(), groundObstacleQueue[i]->get_h(), groundObstacleQueue[i]->get_w(), spriteGround + 2, groundObstacleQueue[i]->get_y(), g_red, g_green, g_blue);
+        drawSprite(groundObstacleQueue[i]->getSpriteReference(), groundObstacleQueue[i]->get_h(), groundObstacleQueue[i]->get_w(), groundObstacleQueue[i]->get_x(), groundObstacleQueue[i]->get_y(), g_red, g_green, g_blue);
         if(dinoSprite->detectCollission(groundObstacleQueue[i]->get_h(), groundObstacleQueue[i]->get_w(), groundObstacleQueue[i]->get_x(), groundObstacleQueue[i]->get_y(), frames))
         {
           crash = true;
