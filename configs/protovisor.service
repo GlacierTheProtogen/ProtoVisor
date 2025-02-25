@@ -1,0 +1,15 @@
+[Unit]
+Description=Protovisor Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/bin/bash -c "cd /home/dietpi/workspace/ProtoVisor && ./protovisor --led-gpio-mapping=adafruit-hat-pwm --led-slowdown-gpio=4 --led-brightness=85" 
+StandardOutput=journal
+StandardError=journal
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
