@@ -199,7 +199,7 @@ public:
 
       for(int i = 0; i < birdObstacleQueue.size(); i++)
       {
-        if(birdObstacleQueue[i]->get_y() > 80)
+        if(birdObstacleQueue[i]->get_y() > 100)
         {
           birdJustSpawned = true;
         }
@@ -207,13 +207,13 @@ public:
 
       for(int i = 0; i < groundObstacleQueue.size(); i++)
       {
-        if(groundObstacleQueue[i]->get_y() > 80)
+        if(groundObstacleQueue[i]->get_y() > 100)
         {
           groundJustSpawned = true;
         }
       }
 
-      int spawnChance = 600;
+      int spawnChance = 400;
 
       int spawnGround = getRandInt() % spawnChance;
       int spawnBird = getRandInt() % spawnChance;
@@ -402,6 +402,27 @@ public:
       if(crash)
       {
         //game over
+        freeFace(dino1, dinoH);
+        freeFace(dino2, dinoH);
+        freeFace(one, digitH);
+        freeFace(two, digitH);
+        freeFace(three, digitH);
+        freeFace(four, digitH);
+        freeFace(five, digitH);
+        freeFace(six, digitH);
+        freeFace(seven, digitH);
+        freeFace(eight, digitH);
+        freeFace(nine, digitH);
+        freeFace(zero, digitH);
+        freeFace(dino1Duck, dinoW);
+        freeFace(dino2Duck, dinoW);
+        freeFace(bird1, birdH);
+        freeFace(bird2, birdH);
+        freeFace(doublecactus1, doubleCactusH);
+        freeFace(doublecactus2, doubleCactusH);
+        freeFace(cactus1, cactusH);
+        freeFace(cactus2, cactusH);
+        freeFace(multicactus, multiCactusH);
         return;
       }
 
