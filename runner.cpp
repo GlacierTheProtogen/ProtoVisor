@@ -79,6 +79,12 @@ public:
         pressed */
 
         flowcounter++;
+
+        if(flowcounter < 0)
+        {
+          flowcounter = 0;
+        }
+
         drawNewFace = false;
 
         rave_switch = (flowcounter - (flowcounter % rave_loop)) % 765;

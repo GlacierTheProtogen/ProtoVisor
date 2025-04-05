@@ -259,6 +259,8 @@ public:
 
         groundObstacle* gobst = new groundObstacle(enemySprite, spriteGround + 1 , 140, enemyWidth, enemyHeight);
         groundObstacleQueue.push_back(gobst);
+
+        groundJustSpawned = true;
       }
 
       if(spawnBird > spawnChance - 10 && birdObstacleQueue.size() < 3 && !groundJustSpawned)
