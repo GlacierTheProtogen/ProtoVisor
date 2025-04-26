@@ -76,7 +76,7 @@ bool checkCollision(std::deque<IntTuple*> &p1snake, int x, int y)
     }
   }
 
-  if(x < 0 || x == 32 || y < 21 || y == 108)
+  if(x < 0 || x == 32 || y < 20 || y == 108)
   {
     return true;
   }
@@ -122,7 +122,7 @@ public:
   {
     for(int i = 0; i < 32; i++)
     {
-      canvas()->SetPixel(20, i, 255, 255, 255);
+      canvas()->SetPixel(19, i, 255, 255, 255);
       canvas()->SetPixel(108, i, 255, 255, 255);
     }
   }
