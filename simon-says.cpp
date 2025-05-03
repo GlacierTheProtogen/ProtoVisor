@@ -45,8 +45,8 @@ public:
     colors[3][2]=0;
 
     // Yellow
-    colors[2][0]=255;
-    colors[2][1]=255;
+    colors[2][0]=180;
+    colors[2][1]=140;
     colors[2][2]=0;
 
     // Green
