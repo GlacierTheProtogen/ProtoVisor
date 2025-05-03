@@ -38,7 +38,7 @@ public:
     bool** thanks = TwoFilesToFace("thanks-left", "thanks-right");
     bool** dead = FileToFace("dead", true);
     bool** hi = TwoFilesToFace("hi-left", "hi-right");
-
+    bool** wtf = TwoFilesToFace("wtf-left", "wtf-right");
 
     //bool** happyblink = FileToFace("happy-blink", false);
     bool** baseblink = FileToFace("baseface-blink", false);
@@ -244,6 +244,11 @@ public:
               currentFace = happyWide;
               rave_mode = true;
             }
+            else if(button == 23)
+            {
+              currentFace= wtf;
+              rave_mode = false;
+            }
             else if(button == 21)
             {
               currentFace = thanks;
@@ -311,7 +316,7 @@ public:
           }
           else
           {
-            if(currentFace == positive || currentFace == negative || currentFace == thanks || currentFace == hi)
+            if(currentFace == positive || currentFace == negative || currentFace == thanks || currentFace == hi || currentFace == wtf)
             {
               drawFullInput(currentFace, (int)(cosign), g_red, g_green, g_blue);
             }
